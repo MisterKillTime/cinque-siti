@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Dentistico Morandi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: clinico ma umano. Bianco, petrolio profondo, acqua. Elemento firma: odontogramma cliccabile in notazione FDI. */
+:root{
+  --bg:#F3F7F7;
+  --card:#FFFFFF;
+  --petrol:#0D4A55;
+  --aqua:#73C6BE;
+  --ink:#10272C;
+  --muted:#567177;
+  --line:#D5E3E3;
+  --display:"Bricolage Grotesque", "Avenir Next", Arial, sans-serif;
+  --body:"Figtree", "Segoe UI", Arial, sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--aqua);outline-offset:2px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
+.lbl{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--petrol)}
+
+nav{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:20px}
+.logo svg{width:30px;height:30px}
+nav ul{display:flex;gap:26px;list-style:none;font-weight:500;font-size:15px}
+nav ul a{text-decoration:none;color:var(--muted)}
+nav ul a:hover{color:var(--petrol)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--petrol);color:#fff;text-decoration:none;font:600 15px var(--body);padding:13px 22px;border-radius:12px;border:0;cursor:pointer;transition:background .2s}
+.btn:hover{background:#0a3a43}
+.btn.soft{background:#E2F2F0;color:var(--petrol)}
+@media (max-width:820px){nav ul{display:none}}
+
+.hero{padding:64px 0 72px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(44px,6vw,76px)}
+.hero h1 span{color:var(--aqua);-webkit-text-stroke:0}
+.hero p{font-size:19px;color:var(--muted);max-width:46ch;margin:20px 0 28px}
+.trust{display:flex;gap:28px;margin-top:34px;flex-wrap:wrap}
+.trust div b{font-family:var(--display);font-size:30px;display:block;color:var(--petrol);font-variant-numeric:tabular-nums}
+.trust div span{font-size:14px;color:var(--muted)}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+
+/* odontogram */
+.odo{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;display:grid;gap:14px}
+.odo header{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.odo h3{font-size:20px}
+.odo small{color:var(--muted);font-size:13px}
+.odo svg{width:100%;height:auto;display:block}
+.tooth{cursor:pointer;transition:fill .15s}
+.tooth path{fill:#fff;stroke:var(--petrol);stroke-width:1.4}
+.tooth:hover path{fill:#E2F2F0}
+.tooth.sel path{fill:var(--aqua)}
+.tooth text{font:600 9px var(--body);fill:var(--muted);pointer-events:none}
+.odo-out{background:var(--bg);border-radius:14px;padding:14px 16px;min-height:76px}
+.odo-out b{font-family:var(--display);font-size:18px}
+.odo-out p{font-size:15px;color:var(--muted)}
+
+section{padding:88px 0}
+.head{max-width:640px;margin-bottom:40px}
+.head h2{font-size:clamp(34px,4.5vw,52px);margin:10px 0 12px}
+.head p{color:var(--muted)}
+
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px;display:grid;gap:10px;align-content:start}
+.svc .ic{width:44px;height:44px;border-radius:12px;background:#E2F2F0;display:grid;place-items:center}
+.svc .ic svg{width:24px;height:24px;stroke:var(--petrol);fill:none;stroke-width:1.8}
+.svc h3{font-size:22px}
+.svc p{color:var(--muted);font-size:15px}
+.svc .from{font-weight:600;font-size:14px;color:var(--petrol);font-variant-numeric:tabular-nums}
+@media (max-width:900px){.services{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.services{grid-template-columns:1fr}}
+
+/* booking */
+.booking{background:var(--petrol);color:#E9F5F4;border-radius:28px;padding:44px;display:grid;grid-template-columns:1fr 1.3fr;gap:40px}
+.booking h2{font-size:clamp(34px,4vw,48px);color:#fff}
+.booking .lbl{color:var(--aqua)}
+.step{display:grid;gap:10px;margin-bottom:22px}
+.step > span{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--aqua)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 15px var(--body);padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer;font-variant-numeric:tabular-nums}
+.chip:hover{border-color:var(--aqua)}
+.chip[aria-pressed="true"]{background:var(--aqua);color:var(--ink);border-color:var(--aqua)}
+.chip small{display:block;font-size:12px;opacity:.75}
+.summary{background:rgba(255,255,255,.08);border-radius:16px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.summary p{font-size:15px}
+.booking .btn{background:var(--aqua);color:var(--ink)}
+.booking .btn:disabled{opacity:.4;cursor:not-allowed}
+@media (max-width:900px){.booking{grid-template-columns:1fr;padding:28px}}
+
+/* team & faq */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.doc{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.doc .ph{height:180px;display:grid;place-items:center;font-family:var(--display);font-size:56px;color:#fff}
+.doc div.t{padding:18px 20px}
+.doc h3{font-size:20px}
+.doc p{font-size:14px;color:var(--muted)}
+@media (max-width:800px){.team{grid-template-columns:1fr}}
+.faq{display:grid;gap:10px;max-width:820px}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+summary{cursor:pointer;font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";font-family:var(--display);font-size:24px;line-height:1;color:var(--petrol)}
+details[open] summary::after{content:"−"}
+details p{margin-top:10px;color:var(--muted);max-width:65ch}
+
+footer{border-top:1px solid var(--line);padding:40px 0;font-size:15px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+footer b{color:var(--ink)}
+
+.live{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.live i{width:8px;height:8px;border-radius:50%;background:#2FA36B;box-shadow:0 0 0 0 rgba(47,163,107,.6);animation:pulse 1.8s infinite}
+.live.off i{background:#C24A3A;animation:none}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(47,163,107,0)}100%{box-shadow:0 0 0 0 rgba(47,163,107,0)}}
+@media (max-width:820px){.live{display:none}}
+/* prima/dopo */
+.ba-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center}
+@media (max-width:900px){.ba-grid{grid-template-columns:1fr}}
+.ba{position:relative;aspect-ratio:16/9;border-radius:24px;overflow:hidden;background:#3A1E22;user-select:none;touch-action:none;cursor:ew-resize}
+.ba svg{position:absolute;inset:0;width:100%;height:100%}
+.ba .after{clip-path:inset(0 0 0 var(--x,50%))}
+.ba .handle{position:absolute;top:0;bottom:0;left:var(--x,50%);width:3px;background:#fff;transform:translateX(-50%)}
+.ba .handle::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff;color:var(--petrol);display:grid;place-items:center;font:700 18px var(--body);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.ba .tag{position:absolute;top:16px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:rgba(0,0,0,.45);color:#fff;padding:5px 10px;border-radius:999px}
+.ba .tag.l{left:16px}.ba .tag.r{right:16px}
+.cases{display:grid;gap:10px}
+.case{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer;text-align:left;font:inherit;color:inherit}
+.case[aria-pressed="true"]{border-color:var(--petrol);box-shadow:inset 4px 0 0 var(--petrol)}
+.case b{display:block;font-family:var(--display);font-size:18px}
+.case small{color:var(--muted)}
+/* rate */
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:28px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px}
+.calc label{display:grid;gap:8px;font-weight:600;font-size:15px}
+.calc input[type=range]{accent-color:var(--petrol);width:100%}
+.calc .v{font-family:var(--display);font-size:28px;color:var(--petrol);font-variant-numeric:tabular-nums}
+.monthly{font-family:var(--display);font-size:clamp(56px,7vw,88px);line-height:1;color:var(--petrol);font-variant-numeric:tabular-nums}
+.bars{display:flex;align-items:end;gap:3px;height:90px;margin-top:16px}
+.bars i{flex:1;background:var(--aqua);border-radius:3px 3px 0 0;transition:height .4s}
+.bars i.paid{background:var(--petrol)}
+@media (max-width:800px){.calc{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.live i{animation:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#0D4A55"/><path d="M10 9c2-1.5 4.2-1 6 0 1.8-1 4-1.5 6 0 2 1.6 1.6 5-.4 8-.9 1.4-1 4-1.6 6-.4 1.3-1.8 1.3-2.1 0l-.9-3.6c-.3-1-1.7-1-2 0l-.9 3.6c-.3 1.3-1.7 1.3-2.1 0-.6-2-.7-4.6-1.6-6-2-3-2.4-6.4-.4-8z" fill="#73C6BE"/></svg>Studio Morandi</a>
+    <ul><li><a href="#cure">Cure</a></li><li><a href="#prenota">Prenota</a></li><li><a href="#team">Team</a></li><li><a href="#faq">Domande</a></li></ul>
+    <span class="live" id="live"><i></i><span>—</span></span>
+    <a class="btn" href="#prenota">Prenota visita</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <p class="lbl">Odontoiatria · Novara centro</p>
+      <h1>Ti spieghiamo cosa facciamo <span>prima</span> di farlo.</h1>
+      <p>Prima visita gratuita con panoramica digitale, preventivo scritto e piano di cura che puoi portare a casa e leggere con calma. Se hai paura del dentista, diccelo: abbiamo tempo.</p>
+      <a class="btn" href="#prenota">Prenota la prima visita gratuita</a>
+      <div class="trust">
+        <div><b data-n="4.9" data-d="1" data-s="/5">4,9/5</b><span>su 412 recensioni</span></div>
+        <div><b data-n="22" data-s=" anni">22 anni</b><span>di attività</span></div>
+        <div><b>0 €</b><span>prima visita</span></div>
+      </div>
+    </div>
+    <div class="odo">
+      <header><h3>Dove senti fastidio?</h3><small>Tocca un dente</small></header>
+      <svg id="odo" viewBox="0 0 400 260" role="group" aria-label="Arcate dentali, notazione FDI"></svg>
+      <div class="odo-out" id="odoOut" aria-live="polite"><b>Nessun dente selezionato</b><p>Lo segnaliamo nella prenotazione, così il medico sa già da dove partire.</p></div>
+    </div>
+  </div>
+</header>
+
+<section id="cure">
+  <div class="wrap">
+    <div class="head"><p class="lbl">Cure</p><h2>Tutto in uno studio, senza rimbalzi.</h2><p>Prezzi indicativi a partire da, sempre confermati per iscritto dopo la visita.</p></div>
+    <div class="services">
+      <div class="svc"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg></div><h3>Igiene e prevenzione</h3><p>Ablazione del tartaro, air-polishing, controllo delle gengive. Ogni 6 mesi.</p><span class="from">da 70 €</span></div>
+      <div class="svc"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 18c3-8 13-8 16 0"/><path d="M12 4v6"/></svg></div><h3>Implantologia</h3><p>Impianti in titanio con guida chirurgica 3D, carico immediato quando possibile.</p><span class="from">da 900 €</span></div>
+      <div class="svc"><div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="5"/><path d="M9 7v10M15 7v10"/></svg></div><h3>Allineatori invisibili</h3><p>Scansione intraorale, simulazione del sorriso finale prima di iniziare.</p><span class="from">da 2.400 €</span></div>
+      <div class="svc"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/></svg></div><h3>Sbiancamento</h3><p>In studio in un'ora, oppure con mascherine su misura a casa.</p><span class="from">da 290 €</span></div>
+      <div class="svc"><div class="ic"><svg viewBox="0 0 24 24"><path d="M6 4h12l-2 16H8z"/><path d="M9 9h6"/></svg></div><h3>Conservativa</h3><p>Otturazioni estetiche in composito, devitalizzazioni al microscopio.</p><span class="from">da 90 €</span></div>
+      <div class="svc"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><circle cx="16" cy="14" r="2.5"/><path d="M4 20c1-3 4-5 7-5"/></svg></div><h3>Pedodonzia</h3><p>Prima visita dai 3 anni, sigillature e una sala d'attesa con i Lego.</p><span class="from">da 50 €</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="prenota" style="padding-top:0">
+  <div class="wrap">
+    <div class="booking">
+      <div>
+        <p class="lbl">Prenota online</p>
+        <h2>Scegli quando. Al resto pensiamo noi.</h2>
+        <p style="margin-top:16px;opacity:.85;max-width:38ch">Ti mandiamo un promemoria il giorno prima. Puoi spostare l'appuntamento fino a 24 ore prima senza costi.</p>
+      </div>
+      <div>
+        <div class="step"><span>1 · Prestazione</span><div class="chips" id="svcChips"></div></div>
+        <div class="step"><span>2 · Giorno</span><div class="chips" id="dayChips"></div></div>
+        <div class="step"><span>3 · Orario</span><div class="chips" id="timeChips"></div></div>
+        <div class="summary"><p id="sum">Scegli prestazione, giorno e orario.</p><button class="btn" id="go" disabled>Conferma</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="risultati" style="padding-top:0">
+  <div class="wrap ba-grid">
+    <div class="ba" id="ba" role="slider" aria-label="Confronto prima e dopo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+      <svg class="before" id="svB" viewBox="0 0 640 360" aria-hidden="true"></svg>
+      <svg class="after" id="svA" viewBox="0 0 640 360" aria-hidden="true"></svg>
+      <span class="tag l">Prima</span><span class="tag r">Dopo</span>
+      <div class="handle"></div>
+    </div>
+    <div>
+      <p class="lbl">Risultati</p>
+      <h2 style="font-size:clamp(34px,4.5vw,52px);margin:10px 0 18px">Trascina e guarda la differenza.</h2>
+      <div class="cases" id="cases">
+        <button class="case" aria-pressed="true" data-c="0"><span><b>Sbiancamento in studio</b><small>1 seduta · 60 minuti</small></span><small>3 tonalità</small></button>
+        <button class="case" aria-pressed="false" data-c="1"><span><b>Allineatori invisibili</b><small>14 mesi · 28 mascherine</small></span><small>affollamento</small></button>
+        <button class="case" aria-pressed="false" data-c="2"><span><b>Faccette in ceramica</b><small>2 sedute · 6 elementi</small></span><small>diastema</small></button>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">Illustrazioni dimostrative, non foto di pazienti.</p>
+    </div>
+  </div>
+</section>
+
+<section id="rate" style="padding-top:0">
+  <div class="wrap">
+    <div class="head"><p class="lbl">Pagamenti</p><h2>Quanto pago al mese?</h2><p>Rate a tasso zero fino a 24 mesi per cure sopra i 600 €. Sposta i cursori.</p></div>
+    <div class="calc">
+      <div style="display:grid;gap:22px">
+        <label for="amt">Importo del preventivo <span class="v" id="amtV"></span><input type="range" id="amt" min="600" max="12000" step="100" value="3200"></label>
+        <label for="mon">Numero di rate <span class="v" id="monV"></span><input type="range" id="mon" min="3" max="24" step="1" value="12"></label>
+      </div>
+      <div><p class="lbl">La tua rata</p><div class="monthly" id="rata"></div><p style="color:var(--muted);margin-top:6px">TAN 0% · TAEG 0% · nessuna spesa di istruttoria (esempio)</p><div class="bars" id="bars" aria-hidden="true"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="team" style="padding-top:0">
+  <div class="wrap">
+    <div class="head"><p class="lbl">Team</p><h2>Le persone che ti guardano in bocca.</h2></div>
+    <div class="team">
+      <div class="doc"><div class="ph" style="background:linear-gradient(135deg,#0D4A55,#2E7C80)">GM</div><div class="t"><h3>Dott. Giulio Morandi</h3><p>Implantologia e chirurgia orale · Ordine di Novara</p></div></div>
+      <div class="doc"><div class="ph" style="background:linear-gradient(135deg,#2E7C80,#73C6BE)">CV</div><div class="t"><h3>Dott.ssa Chiara Vescovi</h3><p>Ortodonzia e allineatori · pedodonzia</p></div></div>
+      <div class="doc"><div class="ph" style="background:linear-gradient(135deg,#567177,#9DB8BC)">AF</div><div class="t"><h3>Anna Ferri</h3><p>Igienista dentale · prevenzione e sbiancamento</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="head"><p class="lbl">Domande</p><h2>Quello che ci chiedono di più.</h2></div>
+    <div class="faq">
+      <details><summary>La prima visita è davvero gratuita?</summary><p>Sì: visita, panoramica digitale e preventivo scritto. Non devi firmare nulla e il preventivo vale 60 giorni.</p></details>
+      <details><summary>Si può pagare a rate?</summary><p>Sì, a tasso zero fino a 24 mesi per cure sopra i 600 €, previa approvazione della finanziaria.</p></details>
+      <details><summary>Accettate fondi sanitari e assicurazioni?</summary><p>Siamo convenzionati in forma diretta con i principali fondi integrativi. Portaci la tessera e verifichiamo noi la copertura.</p></details>
+      <details><summary>Ho paura del dentista. Cosa posso fare?</summary><p>Diccelo quando prenoti. Ti diamo un appuntamento più lungo, ti spieghiamo ogni passaggio e, se serve, usiamo la sedazione cosciente con protossido.</p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><b>Studio Dentistico Morandi</b><br>Via dei Tigli 12, 28100 Novara<br>Dir. sanitario Dott. G. Morandi</div>
+    <div>Lun–Ven 8:30–19:30<br>Sabato 9:00–13:00</div>
+    <div>segreteria@studiomorandi.it<br>0321 555 640</div>
+    <div style="width:100%;font-size:12px">Sito dimostrativo · attività di fantasia</div>
+  </div>
+</footer>
+
+<script>
+// ODONTOGRAMMA FDI
+const NAMES={1:"incisivo centrale",2:"incisivo laterale",3:"canino",4:"primo premolare",5:"secondo premolare",6:"primo molare",7:"secondo molare",8:"dente del giudizio"};
+const Q={1:"superiore destro",2:"superiore sinistro",3:"inferiore sinistro",4:"inferiore destro"};
+const svg=document.getElementById("odo");let selTooth=null;
+function toothPath(w,h,molar){const r=molar?5:4;return `M${-w/2+r},${-h/2} h${w-2*r} q${r},0 ${r},${r} v${h-2*r} q0,${r} ${-r},${r} h${-(w-2*r)} q${-r},0 ${-r},${-r} v${-(h-2*r)} q0,${-r} ${r},${-r}z`}
+let html="";
+[[1,-1,true],[2,1,true],[3,1,false],[4,-1,false]].forEach(([q,side,upper])=>{
+  for(let n=1;n<=8;n++){
+    const a=(n-0.5)/8*(Math.PI*0.48);
+    const cx=200+side*Math.sin(a)*165, cy=(upper?118:142)+(upper?-1:1)*Math.cos(a)*-1*(-95)+(upper?-95:95)*-1;
+    const yy=upper?118-Math.cos(a)*95:142+Math.cos(a)*95;
+    const w=n>=6?24:n>=4?18:16,h=n>=6?24:20;
+    const rot=side*(upper?1:-1)*a*180/Math.PI;
+    const id=`${q}${n}`;
+    html+=`<g class="tooth" tabindex="0" role="button" aria-label="Dente ${id}" data-id="${id}" transform="translate(${cx.toFixed(1)},${yy.toFixed(1)}) rotate(${rot.toFixed(1)})"><path d="${toothPath(w,h,n>=6)}"/><text text-anchor="middle" y="${upper?-h/2-4:h/2+11}">${id}</text></g>`;
+  }
+});
+html+=`<text x="200" y="128" text-anchor="middle" font-size="10" fill="#567177" font-family="Figtree">DESTRA ← → SINISTRA</text>`;
+svg.innerHTML=html;
+function pick(g){svg.querySelectorAll(".tooth").forEach(t=>t.classList.remove("sel"));g.classList.add("sel");
+  const id=g.dataset.id;selTooth=id;
+  document.getElementById("odoOut").innerHTML=`<b>Dente ${id} · ${NAMES[id[1]]} ${Q[id[0]]}</b><p>${id[1]==="8"?"I denti del giudizio danno spesso fastidio tra i 17 e i 25 anni. Una panoramica ci dice se vanno tolti.":id[1]>=6?"I molari masticano tutto il giorno: sono i più soggetti a carie e incrinature.":"Segnato. Lo trovi già nella prenotazione qui sotto."}</p>`;
+  updateSum();}
+svg.addEventListener("click",e=>{const g=e.target.closest(".tooth");if(g)pick(g)});
+svg.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.closest(".tooth")){e.preventDefault();pick(e.target.closest(".tooth"))}});
+
+// PRENOTAZIONE
+const SVC=[["Prima visita","gratis",30],["Igiene","70 €",45],["Dolore / urgenza","da 50 €",30],["Controllo allineatori","incluso",20]];
+const state={svc:null,day:null,time:null};
+function chipGroup(el,items,key,label){
+  el.innerHTML=items.map((it,i)=>`<button class="chip" aria-pressed="false" data-i="${i}" ${it.dis?"disabled style='opacity:.35;cursor:not-allowed'":""}>${label(it)}</button>`).join("");
+  el.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{el.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");state[key]=items[+b.dataset.i];if(key==="day")renderTimes();updateSum()});
+}
+chipGroup(document.getElementById("svcChips"),SVC,"svc",s=>`${s[0]}<small>${s[1]} · ${s[2]} min</small>`);
+const days=[];let d=new Date();d.setDate(d.getDate()+1);
+while(days.length<6){if(d.getDay()!==0)days.push(new Date(d));d.setDate(d.getDate()+1)}
+chipGroup(document.getElementById("dayChips"),days,"day",x=>`${x.toLocaleDateString("it-IT",{weekday:"short"})}<small>${x.getDate()} ${x.toLocaleDateString("it-IT",{month:"short"})}</small>`);
+function renderTimes(){state.time=null;const sat=state.day.getDay()===6;
+  const base=sat?["09:00","09:45","10:30","11:15","12:00"]:["08:30","09:30","11:00","14:30","16:00","17:30","18:30"];
+  const seed=state.day.getDate();
+  chipGroup(document.getElementById("timeChips"),base.map((t,i)=>({t,dis:(seed+i)%4===0})),"time",x=>x.t);}
+document.getElementById("timeChips").innerHTML='<span style="opacity:.7;font-size:15px">Prima scegli il giorno.</span>';
+function updateSum(){const s=document.getElementById("sum"),go=document.getElementById("go");
+  const ok=state.svc&&state.day&&state.time;go.disabled=!ok;
+  if(!ok){s.textContent="Scegli prestazione, giorno e orario.";return}
+  s.innerHTML=`<b>${state.svc[0]}</b> · ${state.day.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})} alle ${state.time.t}${selTooth?` · dente ${selTooth}`:""}`;}
+document.getElementById("go").onclick=()=>{const s=document.getElementById("sum");s.innerHTML=`<b>Prenotato.</b> Ti aspettiamo ${state.day.toLocaleDateString("it-IT",{weekday:"long",day:"numeric"})} alle ${state.time.t}. Arriva 10 minuti prima con la tessera sanitaria. (Demo: nessun dato inviato.)`;document.getElementById("go").disabled=true;};
+
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+// aperto ora
+(()=>{const n=new Date(),d=n.getDay(),h=n.getHours()+n.getMinutes()/60;const open=(d>=1&&d<=5&&h>=8.5&&h<19.5)||(d===6&&h>=9&&h<13);
+ const l=document.getElementById("live");l.classList.toggle("off",!open);l.querySelector("span").textContent=open?"Segreteria aperta ora":"Studio chiuso · prenota online";})();
+// contatori
+document.querySelectorAll("[data-n]").forEach(el=>{if(RM)return;const end=+el.dataset.n,dec=+(el.dataset.d||0),suf=el.dataset.s||"",t0=performance.now();
+ (function f(t){const k=Math.min(1,(t-t0)/1500),v=end*(1-Math.pow(1-k,3));el.textContent=v.toFixed(dec).replace(".",",")+suf;if(k<1)requestAnimationFrame(f)})(t0)});
+// prima / dopo
+const CASES=[{b:{c:"#E2CF9A",off:[0,0,0,0,0,0,0,0],gap:0},a:{c:"#FBFAF6",off:[0,0,0,0,0,0,0,0],gap:0}},
+ {b:{c:"#F1EADA",off:[6,-10,8,-4,10,-8,6,-6],rot:[-8,10,-12,6,-10,12,-6,8],gap:0},a:{c:"#F8F5EE",off:[0,0,0,0,0,0,0,0],gap:0}},
+ {b:{c:"#EDE3CC",off:[0,0,0,0,0,0,0,0],gap:16,chip:true},a:{c:"#FDFCF8",off:[0,0,0,0,0,0,0,0],gap:0}}];
+function teeth(o){const W=[54,62,70,84,84,70,62,54],tot=W.reduce((a,b)=>a+b,0)+o.gap;let x=320-tot/2,out="";
+ out+=`<rect width="640" height="360" fill="#5A2A30"/><path d="M40 150 Q320 40 600 150 L600 230 Q320 330 40 230Z" fill="#2A1013"/><path d="M60 120 Q320 30 580 120 L580 150 Q320 80 60 150Z" fill="#D9747E"/><path d="M60 250 Q320 330 580 250 L580 270 Q320 350 60 270Z" fill="#C25E69"/>`;
+ W.forEach((w,i)=>{if(i===4)x+=o.gap;const dy=o.off[i]||0,r=(o.rot||[])[i]||0,h=i===3||i===4?118:i===2||i===5?104:92;
+  out+=`<g transform="translate(${x+w/2},${118+dy}) rotate(${r})"><path d="M${-w/2+3},0 L${w/2-3},0 Q${w/2},${h*.55} ${w/2-6},${h} Q0,${h+8} ${-w/2+6},${h} Q${-w/2},${h*.55} ${-w/2+3},0Z" fill="${o.c}" stroke="#7A5A50" stroke-opacity=".25"/>${o.chip&&i===3?`<path d="M${w/2-16},${h} l10,-14 l6,12z" fill="#2A1013"/>`:""}<path d="M${-w/2+10},10 Q${-w/2+14},${h*.5} ${-w/2+12},${h-12}" stroke="#fff" stroke-opacity=".5" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;x+=w});
+ return out}
+const ba=document.getElementById("ba");let bx=50,user=false,phase=0;
+function setX(v){bx=Math.max(0,Math.min(100,v));ba.style.setProperty("--x",bx+"%");ba.setAttribute("aria-valuenow",Math.round(bx))}
+function loadCase(i){document.getElementById("svB").innerHTML=teeth(CASES[i].b);document.getElementById("svA").innerHTML=teeth(CASES[i].a);document.querySelectorAll(".case").forEach((c,k)=>c.setAttribute("aria-pressed",k===i))}
+document.querySelectorAll(".case").forEach(c=>c.onclick=()=>{loadCase(+c.dataset.c);user=false});
+function fromEvent(e){const r=ba.getBoundingClientRect();setX((e.clientX-r.left)/r.width*100)}
+ba.addEventListener("pointerdown",e=>{user=true;ba.setPointerCapture(e.pointerId);fromEvent(e);ba.onpointermove=fromEvent});
+ba.addEventListener("pointerup",()=>{ba.onpointermove=null});
+ba.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"){user=true;setX(bx-5)}if(e.key==="ArrowRight"){user=true;setX(bx+5)}});
+(function sweep(t){if(!user&&!RM){setX(50+Math.sin(t/1400)*38)}requestAnimationFrame(sweep)})(0);
+let autoCase=0;setInterval(()=>{if(!user){autoCase=(autoCase+1)%3;loadCase(autoCase)}},8800);
+loadCase(0);setX(50);
+// rate
+const amt=document.getElementById("amt"),mon=document.getElementById("mon");
+function rate(){const a=+amt.value,m=+mon.value,r=a/m;document.getElementById("amtV").textContent=a.toLocaleString("it-IT")+" €";document.getElementById("monV").textContent=m+" mesi";
+ document.getElementById("rata").textContent=r.toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+ document.getElementById("bars").innerHTML=Array.from({length:m},(_,i)=>`<i style="height:${30+70*((i+1)/m)}%" title="Rata ${i+1}: totale versato ${Math.round(a*(i+1)/m).toLocaleString("it-IT")} €"></i>`).join("")}
+amt.oninput=rate;mon.oninput=rate;rate();
+</script>
+</body>
+</html>

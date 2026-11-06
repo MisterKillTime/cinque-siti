@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Torrefazione Ottone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;700&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+/* Layout: e-shop da torrefazione artigiana. Carta kraft e blu cobalto delle buste, etichette in mono come i sacchi di juta. Ogni caffè ha la sua curva di tostatura. */
+:root{
+  --paper:#EEEAE2;
+  --ink:#1A1A2C;
+  --cobalt:#2443B5;
+  --kraft:#C8A675;
+  --white:#FBFAF7;
+  --line:#CFC8BB;
+  --body:"Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --mono:"Fragment Mono", ui-monospace, Menlo, monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+a{color:inherit}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+h1,h2,h3{font-weight:700;letter-spacing:-.03em;line-height:1;text-wrap:balance}
+
+.bar{background:var(--cobalt);color:var(--white);text-align:center;padding:9px 16px}
+nav{border-bottom:1px solid var(--ink)}
+nav .wrap{display:flex;justify-content:space-between;align-items:center;height:70px;gap:16px}
+.logo{font-weight:700;font-size:24px;letter-spacing:-.04em;text-decoration:none}
+.logo sup{font-family:var(--mono);font-size:10px;letter-spacing:0;margin-left:4px;color:var(--cobalt)}
+.cartbtn{display:flex;align-items:center;gap:10px;background:var(--ink);color:var(--white);border:0;padding:11px 18px;cursor:pointer;font-weight:500;font-size:15px}
+.cartbtn b{background:var(--kraft);color:var(--ink);min-width:24px;height:24px;display:grid;place-items:center;border-radius:12px;font-size:13px;font-variant-numeric:tabular-nums;transition:transform .2s}
+.cartbtn b.bump{transform:scale(1.35)}
+
+.hero{display:grid;grid-template-columns:1.3fr 1fr;border-bottom:1px solid var(--ink)}
+.hero .l{padding:64px 24px 56px max(24px,calc((100vw - 1200px)/2 + 24px));border-right:1px solid var(--ink)}
+.hero h1{font-size:clamp(52px,8vw,112px)}
+.hero h1 em{font-style:normal;color:var(--cobalt)}
+.hero p{max-width:42ch;margin:22px 0 0;font-size:19px}
+.hero .r{background:var(--kraft);position:relative;display:grid;place-items:center;padding:32px;min-height:340px}
+.bag{width:min(240px,70%);aspect-ratio:3/4;background:var(--cobalt);position:relative;clip-path:polygon(6% 0,94% 0,100% 8%,100% 100%,0 100%,0 8%);box-shadow:0 30px 40px -20px rgba(0,0,0,.4);display:grid;align-content:end;padding:22px;color:var(--white)}
+.bag::before{content:"";position:absolute;top:0;left:0;right:0;height:16%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 4px,transparent 4px 8px)}
+.bag b{font-size:30px;letter-spacing:-.04em;line-height:.95}
+.bag .mono{margin-top:10px;opacity:.85}
+.stamp{position:absolute;top:24px;right:24px;width:96px;height:96px;border:2px solid var(--ink);border-radius:50%;display:grid;place-items:center;text-align:center;font-family:var(--mono);font-size:11px;line-height:1.3;transform:rotate(12deg)}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.hero .l{border-right:0;border-bottom:1px solid var(--ink);padding:48px 24px}}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:28px 0}
+.filters .mono{margin-right:8px}
+.fbtn{border:1px solid var(--ink);background:transparent;padding:8px 14px;cursor:pointer;font-size:15px}
+.fbtn[aria-pressed="true"]{background:var(--ink);color:var(--white)}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+.p{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:24px;display:grid;gap:14px;align-content:start;background:var(--white)}
+.p .top{display:flex;justify-content:space-between;align-items:start;gap:8px}
+.p h3{font-size:30px}
+.p .origin{color:#5a586a;font-size:15px}
+.p .price{font-weight:700;font-size:24px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.roast{display:grid;gap:6px}
+.roast canvas{width:100%;height:56px;display:block;background:var(--paper)}
+.specs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px dashed var(--line);border-bottom:1px dashed var(--line);padding:10px 0}
+.specs div{display:grid;gap:2px}
+.specs b{font-size:16px;font-variant-numeric:tabular-nums}
+.notes{display:flex;gap:6px;flex-wrap:wrap}
+.notes span{font-size:13px;background:var(--paper);padding:3px 9px;border-radius:999px}
+.row{display:flex;gap:8px}
+.row select{flex:1;font:500 15px var(--body);padding:10px;border:1px solid var(--ink);background:var(--white);color:var(--ink)}
+.add{background:var(--cobalt);color:var(--white);border:0;padding:10px 18px;font-weight:700;cursor:pointer;font-size:15px}
+.add:hover{background:#1a3290}
+.add.done{background:#2F7D4F}
+@media (max-width:960px){.grid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding:88px 0}
+.how h3{font-size:26px;margin:10px 0 8px}
+.how p{color:#4a4858}
+@media (max-width:760px){.how{grid-template-columns:1fr}}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(26,26,44,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:var(--white);z-index:50;transform:translateX(100%);transition:transform .3s;display:grid;grid-template-rows:auto auto 1fr auto;border-left:1px solid var(--ink)}
+.drawer.on{transform:none}
+@media (prefers-reduced-motion:reduce){.drawer,.scrim{transition:none}}
+.drawer header{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid var(--ink)}
+.drawer header h2{font-size:26px}
+.x{background:none;border:0;font-size:28px;cursor:pointer;line-height:1}
+.ship{padding:14px 22px;border-bottom:1px solid var(--line);font-size:14px}
+.ship .track{height:6px;background:var(--paper);margin-top:8px}
+.ship .fill{height:100%;background:var(--cobalt);transition:width .3s}
+.items{overflow:auto;padding:8px 22px}
+.it{display:grid;grid-template-columns:44px 1fr auto;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}
+.it .sw{width:44px;height:56px;background:var(--cobalt);clip-path:polygon(10% 0,90% 0,100% 10%,100% 100%,0 100%,0 10%)}
+.it h4{font-size:16px}
+.it small{color:#5a586a;font-size:13px}
+.qty{display:flex;align-items:center;border:1px solid var(--line);margin-top:6px;width:max-content}
+.qty button{width:28px;height:28px;border:0;background:none;cursor:pointer;font-size:16px}
+.qty span{min-width:24px;text-align:center;font-variant-numeric:tabular-nums;font-size:14px}
+.it .tot{font-weight:700;font-variant-numeric:tabular-nums}
+.empty{padding:40px 0;text-align:center;color:#5a586a}
+.foot{border-top:1px solid var(--ink);padding:18px 22px;display:grid;gap:10px}
+.line{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.line.big{font-size:22px;font-weight:700}
+.checkout{background:var(--ink);color:var(--white);border:0;padding:16px;font-weight:700;font-size:16px;cursor:pointer}
+.checkout:disabled{opacity:.35;cursor:not-allowed}
+footer{border-top:1px solid var(--ink);padding:36px 0;font-size:15px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+
+.bag{transition:background .6s,transform .2s;transform-style:preserve-3d}
+.hero .r{perspective:900px}
+.bag .mono,.bag b{transition:opacity .3s}
+.bag.swap b,.bag.swap .mono{opacity:0}
+.bagdots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.bagdots i{width:20px;height:3px;background:rgba(26,26,44,.25)}
+.bagdots i.on{background:var(--ink)}
+/* ruota aromi */
+.taste{display:grid;grid-template-columns:420px 1fr;gap:48px;align-items:center;padding:72px 0;border-bottom:1px solid var(--ink)}
+.wheel{width:100%;max-width:420px;aspect-ratio:1;position:relative}
+.wheel svg{width:100%;height:100%;display:block}
+.wheel .spin{transform-origin:200px 200px;animation:wheel 60s linear infinite}
+.wheel:hover .spin{animation-play-state:paused}
+@keyframes wheel{to{transform:rotate(360deg)}}
+.wheel path{cursor:pointer;transition:opacity .2s,transform .2s;transform-origin:200px 200px}
+.wheel path:hover{transform:scale(1.04)}
+.wheel path.dim{opacity:.25}
+.wheel text{font:500 12px var(--body);fill:#fff;pointer-events:none}
+.wheel .core{position:absolute;inset:34%;border-radius:50%;background:var(--paper);display:grid;place-items:center;text-align:center;padding:8px;pointer-events:none}
+.wheel .core b{font-size:20px;letter-spacing:-.03em;line-height:1.05}
+.taste h2{font-size:clamp(40px,5vw,64px)}
+.quiz{margin-top:26px;border:1px solid var(--ink);background:var(--white);padding:22px;display:grid;gap:14px}
+.quiz .q{font-weight:700;font-size:20px}
+.quiz .opts{display:flex;gap:8px;flex-wrap:wrap}
+.quiz .opts button{border:1px solid var(--ink);background:transparent;padding:10px 14px;cursor:pointer;font-size:15px}
+.quiz .opts button:hover{background:var(--ink);color:var(--white)}
+.quiz .steps{display:flex;gap:4px}
+.quiz .steps i{flex:1;height:3px;background:var(--line)}
+.quiz .steps i.on{background:var(--cobalt)}
+.p.hit{outline:3px solid var(--cobalt);outline-offset:-3px;animation:hit 1s 2}
+@keyframes hit{50%{background:#E3E8FA}}
+.p{animation:pin .4s both}
+@keyframes pin{from{opacity:0;transform:translateY(10px)}}
+@media (max-width:900px){.taste{grid-template-columns:1fr}.wheel{margin:0 auto}}
+@media (prefers-reduced-motion:reduce){.wheel .spin,.p{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="bar mono">Spedizione gratuita sopra i 39 € · tostato ogni martedì, spedito il mercoledì</div>
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#">Ottone<sup>dal 1962</sup></a>
+    <button class="cartbtn" id="openCart" aria-label="Apri il carrello">Carrello <b id="count">0</b></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="l">
+    <p class="mono">Torrefazione · Novara</p>
+    <h1>Caffè tostato <em>martedì</em>, nella tua moka giovedì.</h1>
+    <p>Crudi scelti per lotto, tostati in piccole partite su un Petroncini del '62 restaurato. Ogni busta riporta data di tostatura e curva.</p>
+  </div>
+  <div class="r">
+    <div class="stamp">TOSTATO<br>IL<br><span id="roastDate">—</span></div>
+    <div class="bag" id="bag"><b id="bagN">Miscela<br>Bar Sport</b><span class="mono" id="bagM">250 g · Moka · Lotto 46/26</span></div>
+    <div class="bagdots" id="bagDots"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="taste">
+    <div class="wheel" id="wheel"><svg viewBox="0 0 400 400" role="group" aria-label="Ruota degli aromi"><g class="spin" id="wheelG"></g></svg><div class="core"><span><span class="mono">Aroma</span><br><b id="wheelLbl">Tutti</b></span></div></div>
+    <div>
+      <span class="mono">Ruota degli aromi</span>
+      <h2>Tocca un aroma. Ti diciamo quale caffè lo ha.</h2>
+      <p style="margin-top:14px;max-width:46ch;color:#4a4858">Oppure rispondi a tre domande e scegliamo noi.</p>
+      <div class="quiz" id="quiz"></div>
+    </div>
+  </div>
+  <div class="filters" role="group" aria-label="Filtra per tostatura">
+    <span class="mono">Tostatura</span>
+    <button class="fbtn" aria-pressed="true" data-f="all">Tutti</button>
+    <button class="fbtn" aria-pressed="false" data-f="chiara">Chiara</button>
+    <button class="fbtn" aria-pressed="false" data-f="media">Media</button>
+    <button class="fbtn" aria-pressed="false" data-f="scura">Scura</button>
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <div class="how">
+    <div><span class="mono">01 · Crudo</span><h3>Compriamo per lotto</h3><p>Assaggiamo ogni partita prima di comprarla. Se non supera 84 punti SCA, resta dov'è.</p></div>
+    <div><span class="mono">02 · Tostatura</span><h3>15 kg alla volta</h3><p>Partite piccole, curva registrata, raffreddamento ad aria. Mai caffè tostato da più di 10 giorni in spedizione.</p></div>
+    <div><span class="mono">03 · Macinatura</span><h3>Solo quando ordini</h3><p>Scegli il metodo e maciniamo il giorno della spedizione. In grani dura di più, ma lo sai già.</p></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b>Torrefazione Ottone</b><br>Via dei Mille 9, Novara</div>
+    <div>ordini@caffeottone.it<br>0321 555 902</div>
+    <div class="mono" style="align-self:end">Sito dimostrativo · attività di fantasia</div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Carrello" aria-hidden="true">
+  <header><h2>Carrello</h2><button class="x" id="closeCart" aria-label="Chiudi il carrello">×</button></header>
+  <div class="ship" id="ship"></div>
+  <div class="items" id="items"></div>
+  <div class="foot">
+    <div class="line"><span>Subtotale</span><span id="sub">0,00 €</span></div>
+    <div class="line"><span>Spedizione</span><span id="shipCost">—</span></div>
+    <div class="line big"><span>Totale</span><span id="tot">0,00 €</span></div>
+    <button class="checkout" id="checkout" disabled>Vai al pagamento</button>
+    <p id="msg" style="font-size:14px;color:#2F7D4F" role="status"></p>
+  </div>
+</aside>
+
+<script>
+const P=[
+  {id:"bar",fam:["Cioccolato", "Frutta secca"],n:"Bar Sport",o:"Miscela · Brasile, India, Uganda",r:"scura",lvl:4.2,price:9.5,alt:"900–1.400",sca:82,proc:"Mista",notes:["Cacao","Nocciola","Corpo pieno"],col:"#2443B5"},
+  {id:"yirga",fam:["Floreale", "Agrumato"],n:"Yirgacheffe",o:"Etiopia · Gedeo",r:"chiara",lvl:1.6,price:14,alt:"1.900–2.200",sca:88,proc:"Lavato",notes:["Gelsomino","Bergamotto","Tè nero"],col:"#7A5BB0"},
+  {id:"cerrado",fam:["Caramello", "Frutta secca"],n:"Cerrado",o:"Brasile · Minas Gerais",r:"media",lvl:3,price:10.5,alt:"1.100",sca:84,proc:"Naturale",notes:["Caramello","Mandorla tostata"],col:"#B5642B"},
+  {id:"huila",fam:["Fruttato", "Caramello", "Agrumato"],n:"Huila",o:"Colombia · Pitalito",r:"media",lvl:2.6,price:12,alt:"1.650",sca:86,proc:"Lavato",notes:["Panela","Mela rossa","Agrumi"],col:"#2E7D5B"},
+  {id:"deca",fam:["Cioccolato", "Caramello"],n:"Deca Notte",o:"Messico · decaffeinato ad acqua",r:"media",lvl:3.2,price:11,alt:"1.300",sca:84,proc:"Swiss Water",notes:["Biscotto","Cioccolato al latte"],col:"#4A4858"},
+  {id:"robusta",fam:["Speziato", "Cioccolato"],n:"Robusta Fine",o:"India · Kaapi Royale",r:"scura",lvl:4.6,price:8.5,alt:"1.000",sca:83,proc:"Lavato",notes:["Spezie","Crema densa","Amaro deciso"],col:"#7B2D26"}
+];
+const GRIND=["In grani","Moka","Espresso","Filtro / V60","French press"];
+const eur=v=>v.toFixed(2).replace(".",",")+" €";
+const grid=document.getElementById("grid");
+function roastCurve(c,lvl){
+  const ctx=c.getContext("2d"),w=c.clientWidth,h=c.clientHeight,d=devicePixelRatio||1;c.width=w*d;c.height=h*d;ctx.scale(d,d);
+  // fasce
+  ["#E6D6B8","#C9A06B","#8A5A33","#4A2E1E"].forEach((col,i)=>{ctx.fillStyle=col;ctx.globalAlpha=.25;ctx.fillRect(i*w/4,0,w/4,h)});ctx.globalAlpha=1;
+  ctx.strokeStyle="#1A1A2C";ctx.lineWidth=2;ctx.beginPath();
+  const end=lvl/5;
+  for(let x=0;x<=w;x++){const t=x/w;if(t>end)break;const y=h-6-(h-14)*(1-Math.exp(-3.2*t))/(1-Math.exp(-3.2));x?ctx.lineTo(x,y):ctx.moveTo(x,y)}
+  ctx.stroke();
+  const ex=end*w,ey=h-6-(h-14)*(1-Math.exp(-3.2*end))/(1-Math.exp(-3.2));
+  ctx.fillStyle="#2443B5";ctx.beginPath();ctx.arc(ex,ey,4,0,7);ctx.fill();
+}
+let famF=null;
+function render(f){
+  grid.innerHTML=P.filter(p=>(f==="all"||p.r===f)&&(!famF||p.fam.includes(famF))).map((p,i)=>`
+  <article class="p" id="p-${p.id}" style="animation-delay:${i*60}ms">
+    <div class="top"><div><span class="mono" style="color:${p.col}">${p.r} · ${p.proc}</span><h3>${p.n}</h3><div class="origin">${p.o}</div></div><span class="price">${eur(p.price)}</span></div>
+    <div class="roast"><span class="mono">Curva di tostatura</span><canvas data-l="${p.lvl}" aria-label="Tostatura ${p.r}"></canvas></div>
+    <div class="specs"><div><span class="mono">Altitudine</span><b>${p.alt} m</b></div><div><span class="mono">SCA</span><b>${p.sca}</b></div><div><span class="mono">Busta</span><b>250 g</b></div></div>
+    <div class="notes">${p.notes.map(n=>`<span>${n}</span>`).join("")}</div>
+    <div class="row"><label class="mono" for="g-${p.id}" style="position:absolute;left:-9999px">Macinatura</label><select id="g-${p.id}">${GRIND.map((g,i)=>`<option ${i===(p.r==="chiara"?3:1)?"selected":""}>${g}</option>`).join("")}</select><button class="add" data-id="${p.id}">Aggiungi</button></div>
+  </article>`).join("");
+  grid.querySelectorAll("canvas").forEach(c=>roastCurve(c,+c.dataset.l));
+  grid.querySelectorAll(".add").forEach(b=>b.onclick=()=>{add(b.dataset.id,document.getElementById("g-"+b.dataset.id).value);b.textContent="Aggiunto ✓";b.classList.add("done");setTimeout(()=>{b.textContent="Aggiungi";b.classList.remove("done")},1300)});
+}
+document.querySelectorAll(".fbtn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".fbtn").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");render(b.dataset.f)});
+render("all");addEventListener("resize",()=>grid.querySelectorAll("canvas").forEach(c=>roastCurve(c,+c.dataset.l)));
+
+// data tostatura: ultimo martedì
+const t=new Date();t.setDate(t.getDate()-((t.getDay()+5)%7));
+document.getElementById("roastDate").textContent=t.toLocaleDateString("it-IT",{day:"2-digit",month:"2-digit"});
+
+// carrello
+let cart=[];const FREE=39,SHIP=4.9;
+function add(id,g){const k=id+"|"+g;const ex=cart.find(c=>c.k===k);ex?ex.q++:cart.push({k,id,g,q:1});draw();
+  const c=document.getElementById("count");c.classList.add("bump");setTimeout(()=>c.classList.remove("bump"),200);}
+function draw(){
+  const items=document.getElementById("items");
+  const sub=cart.reduce((s,c)=>s+P.find(p=>p.id===c.id).price*c.q,0);
+  document.getElementById("count").textContent=cart.reduce((s,c)=>s+c.q,0);
+  items.innerHTML=cart.length?cart.map((c,i)=>{const p=P.find(x=>x.id===c.id);return `<div class="it"><div class="sw" style="background:${p.col}"></div><div><h4>${p.n}</h4><small>250 g · ${c.g}</small><div class="qty"><button data-i="${i}" data-d="-1" aria-label="Togli uno">−</button><span>${c.q}</span><button data-i="${i}" data-d="1" aria-label="Aggiungi uno">+</button></div></div><span class="tot">${eur(p.price*c.q)}</span></div>`}).join(""):`<p class="empty">Il carrello è vuoto.<br>La moka no, speriamo.</p>`;
+  items.querySelectorAll(".qty button").forEach(b=>b.onclick=()=>{const c=cart[+b.dataset.i];c.q+=+b.dataset.d;if(c.q<=0)cart.splice(+b.dataset.i,1);draw()});
+  const ship=sub===0?0:sub>=FREE?0:SHIP;
+  document.getElementById("sub").textContent=eur(sub);
+  document.getElementById("shipCost").textContent=sub===0?"—":ship?eur(ship):"Gratis";
+  document.getElementById("tot").textContent=eur(sub+ship);
+  const miss=Math.max(0,FREE-sub);
+  document.getElementById("ship").innerHTML=`${miss>0?`Ti mancano <b>${eur(miss)}</b> per la spedizione gratuita`:`<b>Spedizione gratuita</b> sbloccata`}<div class="track"><div class="fill" style="width:${Math.min(100,sub/FREE*100)}%"></div></div>`;
+  document.getElementById("checkout").disabled=!cart.length;document.getElementById("msg").textContent="";
+}
+const drawer=document.getElementById("drawer"),scrim=document.getElementById("scrim");
+function toggle(on){drawer.classList.toggle("on",on);scrim.classList.toggle("on",on);drawer.setAttribute("aria-hidden",!on);if(on)document.getElementById("closeCart").focus()}
+document.getElementById("openCart").onclick=()=>toggle(true);
+document.getElementById("closeCart").onclick=()=>toggle(false);
+scrim.onclick=()=>toggle(false);addEventListener("keydown",e=>{if(e.key==="Escape")toggle(false)});
+document.getElementById("checkout").onclick=()=>{document.getElementById("msg").textContent="Demo: qui partirebbe il pagamento (Stripe / PayPal). Nessun ordine inviato.";};
+draw();
+
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+// busta che cambia + tilt
+const bag=document.getElementById("bag"),bd=document.getElementById("bagDots");let bi=0;
+bd.innerHTML=P.map(()=>"<i></i>").join("");
+function showBag(i){bag.classList.add("swap");setTimeout(()=>{const p=P[i];bag.style.background=p.col;document.getElementById("bagN").innerHTML=(p.id==="bar"?"Miscela<br>":"")+p.n;document.getElementById("bagM").textContent=`250 g · ${p.r} · ${p.o.split(" · ")[0]}`;bag.classList.remove("swap")},280);[...bd.children].forEach((x,k)=>x.classList.toggle("on",k===i))}
+showBag(0);if(!RM)setInterval(()=>{bi=(bi+1)%P.length;showBag(bi)},3200);
+const hr=document.querySelector(".hero .r");
+hr.addEventListener("pointermove",e=>{const r=hr.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;bag.style.transform=`rotateY(${x*24}deg) rotateX(${-y*18}deg)`});
+hr.addEventListener("pointerleave",()=>bag.style.transform="");
+// ruota aromi
+const FAM=[["Fruttato","#C2413B"],["Agrumato","#E0A21B"],["Floreale","#9A5BB8"],["Caramello","#B5642B"],["Frutta secca","#8A6A45"],["Cioccolato","#5A3A2C"],["Speziato","#7B2D26"]];
+const wg=document.getElementById("wheelG");const n=FAM.length;
+wg.innerHTML=FAM.map(([f,c],i)=>{const a0=i/n*2*Math.PI-Math.PI/2,a1=(i+1)/n*2*Math.PI-Math.PI/2,R=196,r=90;
+ const P0=[200+R*Math.cos(a0),200+R*Math.sin(a0)],P1=[200+R*Math.cos(a1),200+R*Math.sin(a1)],Q0=[200+r*Math.cos(a1),200+r*Math.sin(a1)],Q1=[200+r*Math.cos(a0),200+r*Math.sin(a0)];
+ const am=(a0+a1)/2,tx=200+143*Math.cos(am),ty=200+143*Math.sin(am),deg=am*180/Math.PI+90;
+ return `<path d="M${P0} A${R},${R} 0 0 1 ${P1} L${Q0} A${r},${r} 0 0 0 ${Q1}Z" fill="${c}" stroke="#EEEAE2" stroke-width="3" data-f="${f}" tabindex="0" role="button" aria-label="${f}"/><text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" transform="rotate(${deg>90&&deg<270?deg+180:deg} ${tx} ${ty})">${f}</text>`}).join("");
+function pickFam(f){famF=famF===f?null:f;wg.querySelectorAll("path").forEach(p=>p.classList.toggle("dim",!!famF&&p.dataset.f!==famF));document.getElementById("wheelLbl").textContent=famF||"Tutti";
+ render(document.querySelector('.fbtn[aria-pressed="true"]').dataset.f);if(famF)document.querySelector(".filters").scrollIntoView({behavior:"smooth",block:"start"})}
+wg.querySelectorAll("path").forEach(p=>{p.onclick=()=>pickFam(p.dataset.f);p.onkeydown=e=>{if(e.key==="Enter")pickFam(p.dataset.f)}});
+// quiz
+const QZ=[["Come lo prepari?",["Moka","Espresso","Filtro / V60"]],["Come lo vuoi in bocca?",["Corposo e amaro","Equilibrato","Acidulo e profumato"]],["Quando lo bevi?",["Mattina presto","Dopo pranzo","Anche la sera"]]];
+let qa=[];const qz=document.getElementById("quiz");
+function quiz(){const k=qa.length;
+ if(k<QZ.length){qz.innerHTML=`<div class="steps">${QZ.map((_,i)=>`<i class="${i<=k?"on":""}"></i>`).join("")}</div><div class="q">${QZ[k][0]}</div><div class="opts">${QZ[k][1].map((o,i)=>`<button data-i="${i}">${o}</button>`).join("")}</div>`;
+  qz.querySelectorAll("button").forEach(b=>b.onclick=()=>{qa.push(+b.dataset.i);quiz()});return}
+ const id=qa[2]===2?"deca":qa[1]===2||qa[0]===2?(qa[1]===0?"huila":"yirga"):qa[1]===0?(qa[0]===1?"robusta":"bar"):"cerrado";
+ const p=P.find(x=>x.id===id);
+ qz.innerHTML=`<div class="steps">${QZ.map(()=>`<i class="on"></i>`).join("")}</div><span class="mono">Il tuo caffè</span><div class="q" style="font-size:30px">${p.n}</div><p>${p.o} · note di ${p.notes.join(", ").toLowerCase()}.</p><div class="opts"><button id="qGo" style="background:var(--cobalt);color:#fff;border-color:var(--cobalt)">Mostramelo</button><button id="qRe">Rifai il quiz</button></div>`;
+ document.getElementById("qRe").onclick=()=>{qa=[];quiz()};
+ document.getElementById("qGo").onclick=()=>{famF=null;wg.querySelectorAll("path").forEach(x=>x.classList.remove("dim"));document.getElementById("wheelLbl").textContent="Tutti";document.querySelectorAll(".fbtn").forEach(x=>x.setAttribute("aria-pressed",x.dataset.f==="all"));render("all");const el=document.getElementById("p-"+id);el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("hit");setTimeout(()=>el.classList.remove("hit"),2200)}}
+quiz();
+</script>
+</body>
+</html>

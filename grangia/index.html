@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trattoria La Grangia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Layout: la risaia allagata come specchio — righe orizzontali d'acqua, verde risaia profondo, paglia. Impaginato da menu stampato. */
+:root{
+  --water:#E3EAE6;
+  --paddy:#1E3A2C;
+  --straw:#D4A23F;
+  --ink:#16201A;
+  --mist:#F4F7F4;
+  --line:#B9C8BF;
+  --display:"Gloock", Georgia, "Times New Roman", serif;
+  --body:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--mist);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--straw);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.02;text-wrap:balance}
+.kicker{font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--straw)}
+
+header.top{position:absolute;inset:0 0 auto 0;z-index:5;color:var(--mist)}
+header.top .wrap{display:flex;justify-content:space-between;align-items:center;height:76px;gap:16px}
+.brand{font-family:var(--display);font-size:26px;text-decoration:none}
+.brand small{font-family:var(--body);font-size:11px;letter-spacing:.24em;text-transform:uppercase;display:block;opacity:.75;margin-top:-2px}
+header.top nav{display:flex;gap:26px;font-size:15px}
+header.top nav a{text-decoration:none;opacity:.85}
+header.top nav a:hover{opacity:1;color:var(--straw)}
+@media (max-width:760px){header.top nav{display:none}}
+
+.hero{background:var(--paddy);color:var(--mist);padding:140px 0 0;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(56px,9vw,128px);max-width:11ch}
+.hero h1 i{color:var(--straw);font-style:normal}
+.hero p{max-width:44ch;font-size:19px;margin:26px 0 34px;opacity:.9}
+.btn{display:inline-block;background:var(--straw);color:var(--ink);text-decoration:none;font-weight:600;padding:15px 26px;border-radius:999px;border:0;font-size:16px;cursor:pointer;font-family:var(--body);transition:background .2s}
+.btn:hover{background:#E6B551}
+.btn.line{background:transparent;color:var(--mist);border:1px solid rgba(244,247,244,.5);margin-left:8px}
+.btn.line:hover{border-color:var(--straw);color:var(--straw);background:transparent}
+canvas#paddy{display:block;width:100%;height:200px;margin-top:64px}
+
+.facts{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.facts div{padding:28px 24px;border-right:1px solid var(--line)}
+.facts div:last-child{border-right:0}
+.facts b{font-family:var(--display);font-size:28px;font-weight:400;display:block}
+.facts span{font-size:15px;color:#4c5a51}
+@media (max-width:760px){.facts{grid-template-columns:1fr}.facts div{border-right:0;border-bottom:1px solid var(--line)}}
+
+section{padding:96px 0}
+.split{display:grid;grid-template-columns:1fr 1.4fr;gap:56px;align-items:start}
+@media (max-width:860px){.split{grid-template-columns:1fr;gap:28px}}
+h2{font-size:clamp(40px,5vw,64px);margin:10px 0 18px}
+.story p+p{margin-top:14px}
+.story p{max-width:60ch}
+
+/* rice calendar */
+.calendar{margin-top:40px;display:grid;grid-template-columns:repeat(12,1fr);border:1px solid var(--line);background:#fff}
+.calendar div{padding:14px 6px 12px;text-align:center;border-right:1px solid var(--line);font-size:12px;letter-spacing:.06em;text-transform:uppercase;position:relative}
+.calendar div:last-child{border-right:0}
+.calendar div i{display:block;height:36px;margin:8px auto 0;width:70%}
+.calendar .w i{background:repeating-linear-gradient(0deg,#9CC3C9 0 3px,#D7E8EA 3px 7px)}
+.calendar .g i{background:linear-gradient(#6E9C57,#3F6B3A)}
+.calendar .h i{background:var(--straw)}
+.calendar .r i{background:#D8D2C2}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:14px;color:#4c5a51}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px}
+.legend .w::before{background:#9CC3C9}.legend .g::before{background:#4F7F45}.legend .h::before{background:var(--straw)}.legend .r::before{background:#D8D2C2}
+@media (max-width:640px){.calendar{grid-template-columns:repeat(6,1fr)}.calendar div:nth-child(6){border-right:0}.calendar div:nth-child(-n+6){border-bottom:1px solid var(--line)}}
+
+/* menu */
+.menu-wrap{background:var(--water)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 34px}
+.tabs button{font:500 16px var(--body);padding:10px 20px;border-radius:999px;border:1px solid var(--paddy);background:transparent;color:var(--paddy);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--paddy);color:var(--mist)}
+.dishes{display:grid;grid-template-columns:1fr 1fr;gap:6px 56px}
+.dish{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.dish h3{font-size:24px}
+.dish .p{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+.dish p{grid-column:1/-1;font-size:15px;color:#4c5a51;max-width:52ch}
+.dish .tags{grid-column:1/-1;display:flex;gap:8px}
+.dish .tags span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--paddy);border:1px solid var(--line);padding:2px 8px;border-radius:999px;background:var(--mist)}
+@media (max-width:760px){.dishes{grid-template-columns:1fr}}
+.tasting{margin-top:48px;background:var(--paddy);color:var(--mist);padding:36px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;border-radius:4px}
+.tasting h3{font-size:34px}
+.tasting .p{font-family:var(--display);font-size:56px;color:var(--straw)}
+@media (max-width:640px){.tasting{grid-template-columns:1fr}}
+
+/* booking */
+.book{display:grid;gap:18px;background:#fff;border:1px solid var(--line);padding:32px;border-radius:4px}
+.book label{display:grid;gap:6px;font-size:14px;font-weight:600}
+.book input,.book select{font:400 16px var(--body);padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:var(--mist);color:var(--ink)}
+.stepper{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:4px;width:max-content;background:var(--mist)}
+.stepper button{width:44px;height:44px;border:0;background:transparent;font-size:22px;cursor:pointer;color:var(--paddy)}
+.stepper output{min-width:52px;text-align:center;font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+.slots{display:flex;flex-wrap:wrap;gap:8px}
+.slots button{font:500 15px var(--body);padding:9px 14px;border:1px solid var(--line);background:var(--mist);border-radius:4px;cursor:pointer;font-variant-numeric:tabular-nums}
+.slots button[aria-pressed="true"]{background:var(--paddy);color:var(--mist);border-color:var(--paddy)}
+.slots button:disabled{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.note{font-size:14px;color:#4c5a51}
+.confirm{display:none;background:var(--paddy);color:var(--mist);padding:28px;border-radius:4px}
+.confirm.show{display:block}
+.confirm h3{font-size:30px;margin-bottom:8px;color:var(--straw)}
+.err{color:#9B2C1E;font-weight:600;font-size:15px}
+
+footer{background:var(--ink);color:#C5D0C8;padding:56px 0 28px;font-size:15px}
+footer .wrap{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px}
+footer .brand{color:var(--mist)}
+footer h4{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--straw);margin-bottom:10px}
+footer .demo{grid-column:1/-1;font-size:12px;opacity:.6;border-top:1px solid #2c3a31;padding-top:20px;margin-top:12px}
+@media (max-width:760px){footer .wrap{grid-template-columns:1fr}}
+
+/* piatto del giorno */
+.hero .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+.plate-stage{position:relative;display:grid;place-items:center;gap:14px}
+.plate-stage canvas{width:min(380px,80vw);aspect-ratio:1;display:block;filter:drop-shadow(0 30px 30px rgba(0,0,0,.35))}
+.plate-cap{text-align:center;min-height:64px}
+.plate-cap b{font-family:var(--display);font-weight:400;font-size:28px;display:block}
+.plate-cap span{font-size:14px;opacity:.75}
+.dots{display:flex;gap:8px;justify-content:center}
+.dots button{width:9px;height:9px;border-radius:50%;border:1px solid var(--straw);background:transparent;cursor:pointer;padding:0}
+.dots button.on{background:var(--straw)}
+/* menu animato */
+.tabs{position:relative}
+.tabs .ind{position:absolute;bottom:-8px;height:2px;background:var(--straw);transition:left .35s,width .35s}
+.dish{cursor:pointer;opacity:0;transform:translateY(12px);animation:rise .5s forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.dish .pair{grid-column:1/-1;max-height:0;overflow:hidden;transition:max-height .35s;font-size:14px;color:var(--paddy)}
+.dish.open .pair{max-height:60px}
+.dish .pair b{font-weight:600}
+.dish h3::after{content:" +";font-family:var(--body);font-size:15px;color:var(--straw)}
+.dish.open h3::after{content:" −"}
+/* recensioni che scorrono */
+.reviews{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff}
+.rv-track{display:inline-flex;gap:56px;padding:22px 0;white-space:nowrap;animation:rv 60s linear infinite}
+.reviews:hover .rv-track{animation-play-state:paused}
+.rv-track span{font-family:var(--display);font-size:22px}
+.rv-track small{font-family:var(--body);font-size:13px;color:#4c5a51;margin-left:10px}
+@keyframes rv{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.rv-track,.dish{animation:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">La Grangia<small>Trattoria in risaia</small></a>
+    <nav><a href="#storia">La cascina</a><a href="#menu">Menu</a><a href="#prenota">Prenota</a></nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+    <p class="kicker">Casalbeltrame · Novara</p>
+    <h1>Il riso lo vedi <i>dalla finestra.</i></h1>
+    <p>Carnaroli e Sant'Andrea coltivati nei campi attorno alla cascina, pilati a pietra e cucinati come si faceva la domenica. Panissa, tapulone, rane fritte quando è stagione.</p>
+    <a class="btn" href="#prenota">Prenota un tavolo</a><a class="btn line" href="#menu">Leggi il menu</a>
+    </div>
+    <div class="plate-stage">
+      <p class="kicker">Oggi in cucina</p>
+      <canvas id="plate" aria-label="Piatto del giorno"></canvas>
+      <div class="plate-cap" aria-live="polite"><b id="pName">—</b><span id="pDesc"></span></div>
+      <div class="dots" id="pDots"></div>
+    </div>
+  </div>
+  <canvas id="paddy" aria-hidden="true"></canvas>
+</div>
+
+<div class="wrap">
+  <div class="facts">
+    <div><b>32 ettari</b><span>di risaia nostra, a 200 m dalla sala</span></div>
+    <div><b>Dal 1974</b><span>tre generazioni, stessa ricetta di panissa</span></div>
+    <div><b>48 coperti</b><span>più 30 sotto il portico da maggio a settembre</span></div>
+  </div>
+</div>
+
+<div class="reviews" aria-label="Recensioni"><div class="rv-track" id="rvt"></div></div>
+
+<section id="storia">
+  <div class="wrap split">
+    <div>
+      <p class="kicker">La cascina</p>
+      <h2>Una grangia è una fattoria di risaia.</h2>
+    </div>
+    <div class="story">
+      <p>Le grange erano le cascine dei monaci cistercensi che bonificarono queste terre nel Duecento. La nostra ha i muri di allora e una cucina degli anni Settanta, quando nonna Pierina iniziò a servire la panissa ai mondariso di passaggio.</p>
+      <p>Oggi in sala c'è Elena, in cucina Davide. Il riso arriva dal campo, riposa un anno in silos e si pila solo quando serve. Per questo il Carnaroli tiene la cottura anche al tavolo più lontano.</p>
+      <div class="calendar" id="cal" aria-label="Calendario della risaia"></div>
+      <div class="legend"><span class="r">Riposo / lavorazione</span><span class="w">Campi allagati</span><span class="g">Riso in crescita</span><span class="h">Trebbiatura</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="menu-wrap" id="menu">
+  <div class="wrap">
+    <p class="kicker">Menu d'autunno</p>
+    <h2>Cosa si mangia</h2>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="dishes" id="dishes" role="tabpanel"></div>
+    <div class="tasting">
+      <div><h3>Il giro della risaia</h3><p style="opacity:.85;margin-top:6px">Antipasto, due risotti, secondo e dolce. Tutto il tavolo, vini esclusi.</p></div>
+      <div class="p">45 €</div>
+    </div>
+  </div>
+</section>
+
+<section id="prenota">
+  <div class="wrap split">
+    <div>
+      <p class="kicker">Prenotazioni</p>
+      <h2>Un tavolo per stasera, o per domenica.</h2>
+      <p style="max-width:40ch">Cena da martedì a sabato, pranzo il sabato e la domenica. Il lunedì siamo nei campi.</p>
+      <p class="note" style="margin-top:18px">Per gruppi oltre 10 persone o pranzi di famiglia scrivici a tavoli@lagrangia.it</p>
+    </div>
+    <div>
+      <form class="book" id="book" novalidate>
+        <label for="date">Giorno<input type="date" id="date" required></label>
+        <div><label id="plab">Persone</label>
+          <div class="stepper" role="group" aria-labelledby="plab">
+            <button type="button" id="minus" aria-label="Una persona in meno">−</button>
+            <output id="pax">2</output>
+            <button type="button" id="plus" aria-label="Una persona in più">+</button>
+          </div>
+        </div>
+        <div><label>Orario</label><div class="slots" id="slots"></div><p class="note" id="slotNote"></p></div>
+        <label for="name">A nome di<input type="text" id="name" autocomplete="name"></label>
+        <p class="err" id="err" role="alert"></p>
+        <button class="btn" type="submit">Conferma prenotazione</button>
+      </form>
+      <div class="confirm" id="confirm" role="status"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><span class="brand">La Grangia</span><p style="margin-top:10px;max-width:36ch">Cascina Grangia, strada vicinale delle Risaie 3, Casalbeltrame (NO)</p></div>
+    <div><h4>Orari</h4>Mar–Sab 19:30–22:30<br>Sab–Dom 12:15–14:30<br>Lunedì chiuso</div>
+    <div><h4>Contatti</h4>tavoli@lagrangia.it<br>0321 555 274</div>
+    <p class="demo">Sito dimostrativo · attività di fantasia</p>
+  </div>
+</footer>
+
+<script>
+// risaia: righe d'acqua con riflesso
+const cv=document.getElementById("paddy"),ctx=cv.getContext("2d");
+const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function draw(t){
+  const w=cv.clientWidth,h=cv.clientHeight,d=devicePixelRatio||1;
+  if(cv.width!==w*d){cv.width=w*d;cv.height=h*d}
+  ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);
+  for(let y=0;y<h;y+=6){
+    const k=y/h;ctx.strokeStyle=`rgba(212,162,63,${0.08+0.5*(1-k)*0.4})`;ctx.lineWidth=1;
+    ctx.beginPath();
+    for(let x=0;x<=w;x+=12){const yy=y+Math.sin(x*0.012+t*0.0009+y*0.05)*(1.5+k*2.5);x?ctx.lineTo(x,yy):ctx.moveTo(x,yy)}
+    ctx.stroke();
+  }
+  // file di piantine
+  ctx.strokeStyle="rgba(140,190,120,.55)";
+  for(let r=0;r<4;r++){const y=h*0.12+r*16;for(let x=10+r*7;x<w;x+=22){const s=Math.sin(t*0.0012+x*0.05)*1.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-3+s,y-10-r);ctx.moveTo(x,y);ctx.lineTo(x+3+s,y-9-r);ctx.stroke()}}
+  if(!still)requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+
+// calendario
+const M=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],S="rrrwwggghhrr";
+document.getElementById("cal").innerHTML=M.map((m,i)=>`<div class="${S[i]}${i===new Date().getMonth()?"":""}" ${i===new Date().getMonth()?'style="background:#FFF6E0"':""}>${m}<i></i></div>`).join("");
+
+// menu
+const MENU={
+ "Antipasti":[["Salam d'la duja","Salame stagionato nello strutto, pane di segale e burro di malga",11,["Tipico"]],["Rane fritte","Rane di risaia in pastella leggera, quando le porta il Beppe",14,["Stagione"]],["Gorgonzola e pere","Gorgonzola dolce di Cameri, pere madernassa al vino",10,["Veg"]],["Insalata di nervetti","Con cipolla rossa e fagioli di Saluggia",9,[]]],
+ "Risi":[["Panissa novarese","Sant'Andrea, fagioli, salam d'la duja, cotenna. La ricetta di Pierina",15,["Firma"]],["Carnaroli zucca e amaretto","Zucca mantovana arrosto, amaretti di Mombaruzzo",14,["Veg"]],["Risotto al Gattinara","Mantecato con toma d'alpeggio",16,[]],["Riso e latte","In bianco, con burro nocciola. Come a casa quando eri malato",10,["Veg"]]],
+ "Secondi":[["Tapulone d'asino","Stracotto tritato al Ghemme, polenta morbida",19,["Tipico"]],["Brasato al Barbera","Guancia di manzo, purè al burro",21,[]],["Trota del Sesia","Al burro e salvia, verdure dell'orto",17,[]],["Uovo in cocotte","Tuorlo morbido, fonduta e tartufo nero",14,["Veg"]]],
+ "Dolci":[["Torta di riso","Al limone, con zabaione caldo",7,["Firma"]],["Bunet","Amaretti e cacao, salsa caramello",6,[]],["Biscottini di Novara","Con un bicchiere di Erbaluce passito",8,[]]]
+};
+const tabs=document.getElementById("tabs"),dishes=document.getElementById("dishes");
+const WINE={"Antipasti":["Erbaluce di Caluso","bianco secco, fresco, sapido"],"Risi":["Ghemme DOCG","nebbiolo dell'Alto Piemonte, tannino gentile"],"Secondi":["Gattinara DOCG","nebbiolo strutturato, da invecchiamento"],"Dolci":["Erbaluce passito","dolce, albicocca e miele"]};
+const ind=document.createElement("span");ind.className="ind";
+function show(k){const bs=[...tabs.querySelectorAll("button")];bs.forEach(b=>b.setAttribute("aria-selected",b.textContent===k));
+ const a=bs.find(b=>b.textContent===k);ind.style.left=a.offsetLeft+"px";ind.style.width=a.offsetWidth+"px";
+ dishes.innerHTML=MENU[k].map(([n,d,p,t],i)=>`<div class="dish" tabindex="0" style="animation-delay:${i*70}ms"><h3>${n}</h3><span class="p">${p} €</span><p>${d}</p>${t.length?`<div class="tags">${t.map(x=>`<span>${x}</span>`).join("")}</div>`:""}<div class="pair">Abbinamento della casa: <b>${WINE[k][0]}</b>, ${WINE[k][1]}. Al calice ${k==="Dolci"?6:7} €.</div></div>`).join("");
+ dishes.querySelectorAll(".dish").forEach(el=>{const tg=()=>el.classList.toggle("open");el.onclick=tg;el.onkeydown=e=>{if(e.key==="Enter")tg()}})}
+Object.keys(MENU).forEach(k=>{const b=document.createElement("button");b.textContent=k;b.setAttribute("role","tab");b.onclick=()=>show(k);tabs.appendChild(b)});tabs.appendChild(ind);
+addEventListener("resize",()=>{const a=tabs.querySelector('[aria-selected="true"]');if(a){ind.style.left=a.offsetLeft+"px";ind.style.width=a.offsetWidth+"px"}});
+show("Risi");
+
+// prenotazione
+const dateEl=document.getElementById("date"),slotsEl=document.getElementById("slots"),note=document.getElementById("slotNote");
+const iso=d=>d.toISOString().slice(0,10);
+const td=new Date();dateEl.min=iso(td);dateEl.value=iso(td);
+let pax=2,slot=null;
+const paxEl=document.getElementById("pax");
+document.getElementById("minus").onclick=()=>{pax=Math.max(1,pax-1);paxEl.textContent=pax;renderSlots()};
+document.getElementById("plus").onclick=()=>{pax=Math.min(10,pax+1);paxEl.textContent=pax;renderSlots()};
+function renderSlots(){
+  const d=new Date(dateEl.value+"T12:00");const wd=d.getDay();slot=null;
+  let list=[];
+  if(wd===1){slotsEl.innerHTML="";note.textContent="Il lunedì siamo chiusi. Scegli un altro giorno.";return}
+  if(wd===6||wd===0)list.push("12:15","12:45","13:15");
+  if(wd!==0)list.push("19:30","20:00","20:30","21:00","21:30");
+  // pseudo disponibilità stabile
+  const seed=d.getDate()*7+wd;
+  slotsEl.innerHTML=list.map((s,i)=>{const full=((seed+i*3)%5===0)||(pax>6&&i%2===1);return `<button type="button" aria-pressed="false" ${full?"disabled title='Pieno'":""}>${s}</button>`}).join("");
+  note.textContent=pax>6?"Per tavoli da più di 6 alcuni orari non sono disponibili.":"Gli orari barrati sono già pieni.";
+  [...slotsEl.children].forEach(b=>b.onclick=()=>{[...slotsEl.children].forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");slot=b.textContent});
+}
+dateEl.onchange=renderSlots;renderSlots();
+document.getElementById("book").addEventListener("submit",e=>{e.preventDefault();
+  const name=document.getElementById("name").value.trim(),err=document.getElementById("err");
+  if(!slot){err.textContent="Scegli un orario.";return}
+  if(!name){err.textContent="Lasciaci un nome per il tavolo.";return}
+  err.textContent="";
+  const d=new Date(dateEl.value+"T12:00").toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"});
+  e.target.style.display="none";const c=document.getElementById("confirm");c.classList.add("show");
+  c.innerHTML=`<h3>Tavolo tenuto.</h3><p>${name.replace(/</g,"")}, ${pax} ${pax>1?"persone":"persona"}, ${d} alle ${slot}.</p><p style="margin-top:10px;opacity:.8">Se tardi più di 20 minuti chiamaci. (Demo: nessuna prenotazione inviata.)</p>`;
+});
+
+// recensioni
+const RV=[["La panissa migliore della provincia, e non scherzo.","Paolo, Vercelli"],["Rane fritte croccanti come non le mangiavo da bambino.","Marisa, Novara"],["Elena ti racconta il riso come un sommelier racconta il vino.","Thomas, Zurigo"],["Pranzo della domenica sotto il portico: perfetto.","Famiglia Gatti"],["Prezzo onesto, porzioni da nonna, servizio da ristorante vero.","Luca, Milano"]];
+document.getElementById("rvt").innerHTML=[...RV,...RV].map(([q,a])=>`<span>“${q}”<small>${a} · ★★★★★</small></span>`).join("");
+
+// piatto del giorno, disegnato dall'alto
+const PL=[
+ {n:"Panissa novarese",d:"Sant'Andrea, fagioli borlotti, salam d'la duja",base:["#9B4E2E","#C27A4A"],grain:"#F3E7D3",dots:[["#5A2A1C",40,6],["#E8D8C0",14,4]]},
+ {n:"Carnaroli zucca e amaretto",d:"Zucca arrosto, amaretti sbriciolati, salvia",base:["#E39A3B","#F2C06A"],grain:"#FFF1D6",dots:[["#8C5A2B",30,3],["#5E7D3A",6,7]]},
+ {n:"Risotto al Gattinara",d:"Mantecato con toma d'alpeggio",base:["#6E2335","#94404F"],grain:"#E9C9CF",dots:[["#F4E9D4",18,5]]},
+ {n:"Riso e latte",d:"In bianco, burro nocciola, noce moscata",base:["#EFE6D2","#FBF6EA"],grain:"#FFFFFF",dots:[["#B07A3E",22,3]]}
+];
+const pc=document.getElementById("plate"),px=pc.getContext("2d");let pi=0,ang=0,trans=1,prev=null;
+const pd=document.getElementById("pDots");pd.innerHTML=PL.map((_,i)=>`<button aria-label="${PL[i].n}"></button>`).join("");
+function rng(seed){return()=>((seed=seed*16807%2147483647)/2147483647)}
+function paintDish(c,R,d,seed){const r=rng(seed+7);
+  const g=c.createRadialGradient(-R*.2,-R*.2,0,0,0,R*.62);g.addColorStop(0,d.base[1]);g.addColorStop(1,d.base[0]);
+  c.beginPath();for(let a=0;a<=Math.PI*2+.01;a+=.2){const rr=R*(.58+r()*.04);c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}c.fillStyle=g;c.fill();
+  for(let i=0;i<260;i++){const a=r()*7,rr=Math.sqrt(r())*R*.55;c.save();c.translate(Math.cos(a)*rr,Math.sin(a)*rr);c.rotate(r()*7);c.beginPath();c.ellipse(0,0,R*.022,R*.009,0,0,7);c.fillStyle=d.grain;c.globalAlpha=.55+r()*.4;c.fill();c.restore()}
+  c.globalAlpha=1;d.dots.forEach(([col,n,sz])=>{for(let i=0;i<n;i++){const a=r()*7,rr=Math.sqrt(r())*R*.5;c.beginPath();c.arc(Math.cos(a)*rr,Math.sin(a)*rr,sz*(R/190)*(.6+r()*.6),0,7);c.fillStyle=col;c.fill()}});
+}
+function drawPlate(t){
+  const s=pc.clientWidth,dpr=devicePixelRatio||1;if(pc.width!==s*dpr){pc.width=s*dpr;pc.height=s*dpr}
+  px.setTransform(dpr,0,0,dpr,s/2,s/2);px.clearRect(-s/2,-s/2,s,s);const R=s*.48;
+  px.beginPath();px.arc(0,0,R,0,7);px.fillStyle="#F7F5EE";px.fill();
+  px.beginPath();px.arc(0,0,R*.94,0,7);px.strokeStyle="#D4A23F";px.lineWidth=1.5;px.stroke();
+  px.beginPath();px.arc(0,0,R*.7,0,7);px.fillStyle="#EFECE2";px.fill();
+  if(!still)ang+=.0018;if(trans<1)trans=Math.min(1,trans+.03);
+  px.save();px.rotate(ang);
+  if(prev&&trans<1){px.save();px.globalAlpha=1-trans;px.rotate(-trans*1.2);paintDish(px,R,prev,PL.indexOf(prev));px.restore()}
+  px.globalAlpha=trans;px.rotate((1-trans)*1.2);px.scale(.85+.15*trans,.85+.15*trans);paintDish(px,R,PL[pi],pi);px.restore();px.globalAlpha=1;
+  requestAnimationFrame(drawPlate)}
+function setDish(i){prev=PL[pi];pi=i;trans=still?1:0;document.getElementById("pName").textContent=PL[i].n;document.getElementById("pDesc").textContent=PL[i].d;[...pd.children].forEach((b,k)=>b.classList.toggle("on",k===i))}
+let ptimer=setInterval(()=>setDish((pi+1)%PL.length),4200);
+[...pd.children].forEach((b,i)=>b.onclick=()=>{clearInterval(ptimer);setDish(i);ptimer=setInterval(()=>setDish((pi+1)%PL.length),4200)});
+setDish(0);prev=null;requestAnimationFrame(drawPlate);
+</script>
+</body>
+</html>

@@ -6,7 +6,7 @@
 <title>Forgia Training Club</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@100..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* Layout: cemento chiaro + nastro segnaletico, tipografia condensata enorme. Palestra industriale vera, non “fitness patinato”. */
 :root{
@@ -198,10 +198,32 @@ footer b{font-family:var(--display);font-size:26px;color:var(--ink)}
 @keyframes fill{to{transform:scaleX(1)}}
 @media (max-width:640px){.rev{min-height:360px;padding:28px}.rev blockquote{inset:28px 28px auto 28px}.rev .prog{left:28px;right:28px}}
 @media (prefers-reduced-motion:reduce){.rot span,.plate,.rev blockquote{transition:none;animation:none}}
+
+/* v3 */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--signal);z-index:60;width:0}
+#sparks{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.hero{cursor:crosshair}
+.hero h1 .ch{display:inline-block;font-weight:600;transition:font-weight .12s linear}
+.crowd{display:grid;gap:8px}
+.crowd canvas{width:100%;height:64px;display:block}
+.crowd .lbl{display:flex;justify-content:space-between;align-items:baseline}
+.crowd b{font-family:var(--display);font-size:26px;font-weight:900}
+.plans{perspective:1100px}
+.plan{transition:transform .25s ease,box-shadow .25s;transform-style:preserve-3d;will-change:transform}
+.plan:hover{box-shadow:12px 16px 0 var(--ink)}
+.plan.hot:hover{box-shadow:12px 16px 0 var(--signal)}
+@supports (animation-timeline:view()){
+  .sec-head,.disc article,.plan,.sched,.lab,.rev{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 35%}
+  @keyframes rise{from{opacity:.15;transform:translateY(48px)}}
+  .progress{animation:prog linear both;animation-timeline:scroll(root)}
+  @keyframes prog{to{width:100%}}
+}
+@media (prefers-reduced-motion:reduce){.sec-head,.disc article,.plan,.sched,.lab,.rev,.progress{animation:none!important}}
 </style>
 </head>
 <body>
 
+<div class="progress" aria-hidden="true"></div>
 <nav>
   <div class="wrap">
     <a class="logo" href="#top"><span></span>FORGIA</a>
@@ -216,6 +238,7 @@ footer b{font-family:var(--display);font-size:26px;color:var(--ink)}
 </nav>
 
 <header class="hero" id="top">
+  <canvas id="sparks" aria-hidden="true"></canvas>
   <div class="wrap hero-grid">
     <div>
       <p class="eyebrow">Training Club · Novara · dal 2019</p>
@@ -230,6 +253,7 @@ footer b{font-family:var(--display);font-size:26px;color:var(--ink)}
       <div class="row"><small>Adesso</small><span class="pill" id="openPill"><i></i><b id="openTxt">…</b></span></div>
       <div class="row"><div><small>Prossima classe</small><div class="big" id="nextClass">—</div></div></div>
       <div class="row"><small id="nextMeta">—</small></div>
+      <div class="crowd"><div class="lbl"><small>Affollamento oggi</small><b id="crowdNow">—</b></div><canvas id="crowd" aria-label="Affollamento previsto durante la giornata"></canvas><small id="crowdTip">—</small></div>
     </aside>
   </div>
   <div class="tape" aria-hidden="true">
@@ -447,6 +471,49 @@ lift();
   pg.innerHTML=q.map((_,k)=>`<button aria-label="Recensione ${k+1}"><i></i></button>`).join("");const bs=[...pg.children];
   function go(n){i=n;q.forEach((x,k)=>x.classList.toggle("on",k===i));bs.forEach((b,k)=>{b.classList.remove("run","done");if(k<i)b.classList.add("done")});void bs[i].offsetWidth;if(!RM)bs[i].classList.add("run");clearTimeout(t);t=setTimeout(()=>go((i+1)%q.length),5000)}
   bs.forEach((b,k)=>b.onclick=()=>go(k));go(0)})();
+
+// ===== v3 =====
+// lettere che "flettono"
+(()=>{const h1=document.querySelector(".hero h1");const tn=h1.firstChild;if(!tn||tn.nodeType!==3)return;
+ const frag=document.createDocumentFragment();[...tn.textContent].forEach(c=>{if(c===" "){frag.appendChild(document.createTextNode(" "));return}const sp=document.createElement("span");sp.className="ch";sp.textContent=c;frag.appendChild(sp)});
+ h1.replaceChild(frag,tn);const chs=[...h1.querySelectorAll(".ch")];let last=-1e9,mx=0,my=0;
+ const hero=document.querySelector(".hero");
+ hero.addEventListener("pointermove",e=>{last=performance.now();mx=e.clientX;my=e.clientY});
+ (function loop(t){if(!RM){if(t-last<1800){chs.forEach(c=>{const r=c.getBoundingClientRect(),d=Math.hypot(r.left+r.width/2-mx,r.top+r.height/2-my);c.style.fontWeight=Math.round(200+700*Math.max(0,1-d/260))})}
+  else{chs.forEach((c,i)=>{const w=Math.max(0,Math.cos((i*.55-t/380)%(Math.PI*2)));c.style.fontWeight=Math.round(300+600*Math.pow(w,3))})}}
+  else chs.forEach(c=>c.style.fontWeight=900);requestAnimationFrame(loop)})(0);})();
+
+// scintille dal nastro + scoppio al click
+(()=>{const cv=document.getElementById("sparks"),x=cv.getContext("2d"),hero=document.querySelector(".hero"),tape=document.querySelector(".tape");let P=[],W,H;
+ function size(){const d=devicePixelRatio||1;W=hero.clientWidth;H=hero.clientHeight;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0)}size();addEventListener("resize",size);
+ function burst(px,py,n,up){for(let i=0;i<n;i++){const a=up?(-Math.PI/2+(Math.random()-.5)*1.6):Math.random()*Math.PI*2,v=3+Math.random()*7;P.push({x:px,y:py,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,dl:.012+Math.random()*.02})}}
+ hero.addEventListener("click",e=>{if(e.target.closest("a,button"))return;const r=hero.getBoundingClientRect();burst(e.clientX-r.left,e.clientY-r.top,70,false)});
+ let gx=0;
+ (function loop(t){x.clearRect(0,0,W,H);
+  if(!RM){const tr=tape.getBoundingClientRect(),hr=hero.getBoundingClientRect();gx=(Math.sin(t/1700)*.42+.5)*W;const ty=tr.top-hr.top+ (gx/W-.5)*W*Math.tan(-1.6*Math.PI/180)*-1;
+   if(Math.random()<.9)burst(gx,ty+4,3,true);}
+  x.globalCompositeOperation="source-over";
+  P=P.filter(p=>p.l>0);P.forEach(p=>{const ox=p.x,oy=p.y;p.vy+=.22;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.l-=p.dl;
+   x.strokeStyle=p.l>.6?`rgba(255,206,92,${p.l})`:`rgba(232,67,28,${p.l})`;x.lineWidth=p.l*2.4;x.beginPath();x.moveTo(ox,oy);x.lineTo(p.x,p.y);x.stroke()});
+  if(P.length>900)P.splice(0,P.length-900);requestAnimationFrame(loop)})(0);})();
+
+// affollamento previsto
+(()=>{const cv=document.getElementById("crowd"),x=cv.getContext("2d");const f=h=>{const g=(m,s,a)=>a*Math.exp(-((h-m)**2)/(2*s*s));return Math.min(1,.08+g(7.2,.8,.55)+g(12.8,.9,.5)+g(18.8,1.3,.95)+g(10,1.5,.15))};
+ const[o,c]=OPEN[today];const nowH=now.getHours()+now.getMinutes()/60;
+ function draw(){const d=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*d;cv.height=h*d;x.setTransform(d,0,0,d,0,0);
+  const X=v=>(v-o)/(c-o)*w,Y=v=>h-4-v*(h-10);
+  x.strokeStyle="#2a2a2a";x.lineWidth=1;[.25,.5,.75].forEach(g=>{x.beginPath();x.moveTo(0,Y(g));x.lineTo(w,Y(g));x.stroke()});
+  x.beginPath();x.moveTo(0,h);for(let v=o;v<=c;v+=.1)x.lineTo(X(v),Y(f(v)));x.lineTo(w,h);x.closePath();
+  const gr=x.createLinearGradient(0,0,0,h);gr.addColorStop(0,"rgba(232,67,28,.55)");gr.addColorStop(1,"rgba(232,67,28,0)");x.fillStyle=gr;x.fill();
+  x.beginPath();for(let v=o;v<=c;v+=.1)v===o?x.moveTo(X(v),Y(f(v))):x.lineTo(X(v),Y(f(v)));x.strokeStyle="#E8431C";x.lineWidth=2;x.stroke();
+  if(nowH>=o&&nowH<c){x.fillStyle="#fff";x.beginPath();x.arc(X(nowH),Y(f(nowH)),4.5,0,7);x.fill();x.strokeStyle="#fff";x.setLineDash([2,3]);x.beginPath();x.moveTo(X(nowH),0);x.lineTo(X(nowH),h);x.stroke();x.setLineDash([])}}
+ draw();addEventListener("resize",draw);
+ const v=nowH>=o&&nowH<c?f(nowH):0;document.getElementById("crowdNow").textContent=nowH>=o&&nowH<c?(v<.35?"Tranquillo":v<.7?"Medio":"Pieno"):"Chiuso";
+ let best=o,bv=9;for(let h=Math.max(o,nowH);h<c-1;h+=.5){if(f(h)<bv){bv=f(h);best=h}}
+ document.getElementById("crowdTip").textContent=nowH<c-1?`Più tranquillo oggi: verso le ${Math.floor(best)}:${best%1?"30":"00"}`:`Domani apriamo alle ${OPEN[(today+1)%7][0]}:00`;})();
+
+// abbonamenti 3D
+document.querySelectorAll(".plan").forEach(pl=>{pl.addEventListener("pointermove",e=>{if(RM)return;const r=pl.getBoundingClientRect(),a=(e.clientX-r.left)/r.width-.5,b=(e.clientY-r.top)/r.height-.5;pl.style.transform=`rotateY(${a*14}deg) rotateX(${-b*14}deg) translateY(-6px)`});pl.addEventListener("pointerleave",()=>pl.style.transform="")});
 </script>
 </body>
 </html>

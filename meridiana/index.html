@@ -117,14 +117,35 @@ section{padding:96px 0}
 @media (max-width:860px){.quote{grid-template-columns:1fr}}
 footer{border-top:1px solid rgba(234,223,198,.12);padding:36px 0;color:var(--mist);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* v3 */
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+body{background:transparent}
+html{background:var(--deep)}
+.passport{display:grid;grid-template-columns:1fr 1.6fr;gap:40px;align-items:start}
+.pp-book{background:linear-gradient(135deg,#123247,#0E2536);border:1px solid rgba(201,160,74,.35);border-radius:6px;padding:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative;box-shadow:0 30px 60px -30px rgba(0,0,0,.8)}
+.pp-book::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(201,160,74,.25)}
+.slot{aspect-ratio:1;border:1px dashed rgba(234,223,198,.18);border-radius:50%;display:grid;place-items:center;position:relative}
+.slot span{font-family:var(--mono);font-size:10px;color:rgba(159,180,192,.5);text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.slot svg{position:absolute;inset:-6%;width:112%;height:112%}
+.slot.stamped svg{animation:thump .45s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes thump{from{transform:scale(2.2) rotate(var(--r));opacity:0}to{transform:scale(1) rotate(var(--r));opacity:.92}}
+.slot.stamped svg{transform:rotate(var(--r));opacity:.92}
+.pp-count{font-family:var(--display);font-size:72px;line-height:1;color:var(--gold)}
+.reward{margin-top:18px;border:1px dashed var(--gold);padding:16px;display:none}
+.reward.on{display:block}
+.reward code{font-family:var(--mono);font-size:22px;color:var(--gold);letter-spacing:.1em}
+@media (max-width:860px){.passport{grid-template-columns:1fr}.pp-book{grid-template-columns:repeat(4,1fr);padding:16px;gap:8px}}
+@media (prefers-reduced-motion:reduce){.slot.stamped svg{animation:none}}
 </style>
 </head>
 <body>
 
+<canvas id="stars" aria-hidden="true"></canvas>
 <nav>
   <div class="wrap">
     <a class="logo" href="#"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="none" stroke="#C9A04A" stroke-width="1.5"/><ellipse cx="14" cy="14" rx="5" ry="12" fill="none" stroke="#C9A04A" stroke-width="1.2"/><path d="M2 14h24" stroke="#C9A04A" stroke-width="1.2"/></svg>Meridiana</a>
-    <ul><li><a href="#globo">Il mappamondo</a></li><li><a href="#partenze">Partenze</a></li><li><a href="#preventivo">Preventivo</a></li></ul>
+    <ul><li><a href="#globo">Il mappamondo</a></li><li><a href="#partenze">Partenze</a></li><li><a href="#passaporto">Passaporto</a></li><li><a href="#preventivo">Preventivo</a></li></ul>
     <a class="btn" href="#preventivo">Su misura</a>
   </div>
 </nav>
@@ -169,6 +190,20 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   <div class="wrap">
     <div class="sh"><h2>Prossime partenze</h2><p>Gruppi da massimo 12 persone con accompagnatore. Tocca una card per vederla sul mappamondo.</p></div>
     <div class="cards" id="cards"></div>
+  </div>
+</section>
+
+<section id="passaporto" style="padding-top:0">
+  <div class="wrap passport">
+    <div>
+      <p class="mono">Il tuo passaporto</p>
+      <h2 style="font-size:clamp(40px,5vw,64px);margin:12px 0 16px">Un timbro per ogni posto che esplori.</h2>
+      <p style="color:var(--mist);max-width:40ch">Visita sul mappamondo tutte e otto le destinazioni e sblocchi uno sconto sul primo viaggio.</p>
+      <div style="margin-top:22px"><span class="pp-count" id="ppN">0</span><span class="mono" style="margin-left:10px">di 8 timbri</span></div>
+      <div class="reward" id="reward"><span class="mono">Codice sbloccato</span><br><code>GIRAMONDO8</code><p style="color:var(--mist);font-size:14px;margin-top:6px">8% di sconto su qualsiasi partenza 2027. (Demo)</p></div>
+      <button class="btn ghost" id="ppReset" style="margin-top:18px">Svuota il passaporto</button>
+    </div>
+    <div class="pp-book" id="ppBook"></div>
   </div>
 </section>
 
@@ -256,7 +291,11 @@ function draw(now){
   // night
   const s=sunPos();ctx.beginPath();path(night.center([s[0]+180,-s[1]])());ctx.fillStyle="rgba(4,12,18,.42)";ctx.fill();
   // route from MXP to selection
-  if(sel){ctx.beginPath();path({type:"LineString",coordinates:[MXP,sel.ll]});ctx.setLineDash([4,5]);ctx.strokeStyle="#C9A04A";ctx.lineWidth=1.6;ctx.stroke();ctx.setLineDash([])}
+  if(!sel&&zoom<1.3){ctx.setLineDash([3,6]);ctx.lineDashOffset=-now/40;ctx.strokeStyle="rgba(201,160,74,.45)";ctx.lineWidth=1;DEST.forEach(d=>{ctx.beginPath();path({type:"LineString",coordinates:[MXP,d.ll]});ctx.stroke()});ctx.setLineDash([]);ctx.lineDashOffset=0}
+  if(sel){ctx.beginPath();path({type:"LineString",coordinates:[MXP,sel.ll]});ctx.setLineDash([4,5]);ctx.lineDashOffset=-now/30;ctx.strokeStyle="#C9A04A";ctx.lineWidth=1.6;ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;
+    if(d3.geoDistance(MXP,sel.ll)>.02){const gi=d3.geoInterpolate(MXP,sel.ll),u=(now/4200)%1,a=gi(u),b=gi(Math.min(1,u+.01)),cen=[-rot[0],-rot[1]];
+      if(d3.geoDistance(a,cen)<1.5){const pa=proj(a),pb=proj(b),ang=Math.atan2(pb[1]-pa[1],pb[0]-pa[0]);ctx.save();ctx.translate(pa[0],pa[1]);ctx.rotate(ang);ctx.fillStyle="#EADFC6";ctx.strokeStyle="#08161F";ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(11,0);ctx.lineTo(-7,-2);ctx.lineTo(-9,-9);ctx.lineTo(-11,-9);ctx.lineTo(-9,-2);ctx.lineTo(-13,-2);ctx.lineTo(-15,-5);ctx.lineTo(-16,-5);ctx.lineTo(-15,0);ctx.lineTo(-16,5);ctx.lineTo(-15,5);ctx.lineTo(-13,2);ctx.lineTo(-9,2);ctx.lineTo(-11,9);ctx.lineTo(-9,9);ctx.lineTo(-7,2);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore()}}}
   // pins
   const pulse=(now%2000)/2000;
   DEST.forEach(d=>{if(d3.geoDistance(d.ll,[-rot[0],-rot[1]])>1.5)return;const[x,y]=proj(d.ll);
@@ -294,6 +333,7 @@ function select(ll,forced){
   spin=false;const d=forced||nearestDest(ll);const target=d?d.ll:ll;
   const f=countries.find(c=>d3.geoContains(c,target));
   sel={ll:target,d,f};
+  if(d)stamp(d);
   document.querySelectorAll("#dest button").forEach(b=>b.classList.toggle("on",d&&b.dataset.n===d.n));
   flyTo(target,3.6,()=>openPanel(sel));
 }
@@ -307,7 +347,7 @@ function localTime(lon,tz){const n=new Date();const off=tz!==undefined?tz:Math.r
 function openPanel(s){
   const{ll,d,f}=s;
   document.getElementById("pName").textContent=d?d.n:(f?cname(f):"In mezzo all'oceano");
-  document.getElementById("pCoord").textContent=`${dms(ll[1],"N","S")}  ${dms(ll[0],"E","O")}${d?" · "+d.c:""}`;
+  document.getElementById("pCoord").textContent=`${dms(ll[1],"N","S")}  ${dms(ll[0],"E","O")}${d?" · "+d.c:f&&d?"":f?"":""}`;
   const t=localTime(ll[0],d?.tz);
   document.getElementById("pTime").textContent=t.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"});
   const hh=t.getHours();document.getElementById("pDay").textContent=hh<6||hh>=21?"Notte":hh<12?"Mattina":hh<18?"Pomeriggio":"Sera";
@@ -380,6 +420,33 @@ document.getElementById("qForm").addEventListener("submit",e=>{e.preventDefault(
   if(!/^\S+@\S+\.\S+$/.test(m)){err.textContent="Controlla l'email: serve per mandarti il preventivo.";return}
   err.textContent="";e.target.style.display="none";const ok=document.getElementById("qOk");ok.classList.add("show");
   ok.innerHTML=`<h3 style="font-size:30px;color:var(--gold)">Ricevuto.</h3><p style="margin-top:8px">${dst.replace(/</g,"")}, budget ${qo.textContent} a persona, ${document.getElementById("qWhen").value.toLowerCase()}. Ti scriviamo entro 48 ore. (Demo: nessun dato inviato.)</p>`;});
+// ===== v3 =====
+// cielo stellato
+(()=>{const c=document.getElementById("stars"),x=c.getContext("2d");let S=[],W,H,shoot=null;
+ function size(){const d=devicePixelRatio||1;W=innerWidth;H=innerHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0);S=Array.from({length:Math.round(W*H/5000)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,p:Math.random()*7,z:Math.random()}))}
+ size();addEventListener("resize",size);
+ (function loop(t){x.clearRect(0,0,W,H);const sy=scrollY*.05;
+  S.forEach(s=>{const a=.25+.6*Math.abs(Math.sin(t*.0008*(.5+s.z)+s.p));x.fillStyle=`rgba(234,223,198,${a})`;x.beginPath();x.arc(s.x,(s.y-sy*s.z+H)%H,s.r,0,7);x.fill()});
+  if(!reduce){if(!shoot&&Math.random()<.004)shoot={x:Math.random()*W*.8,y:Math.random()*H*.4,l:1};
+   if(shoot){const g=x.createLinearGradient(shoot.x,shoot.y,shoot.x-90,shoot.y-40);g.addColorStop(0,`rgba(255,240,200,${shoot.l})`);g.addColorStop(1,"rgba(255,240,200,0)");x.strokeStyle=g;x.lineWidth=1.5;x.beginPath();x.moveTo(shoot.x,shoot.y);x.lineTo(shoot.x-90,shoot.y-40);x.stroke();shoot.x+=9;shoot.y+=4;shoot.l-=.025;if(shoot.l<=0)shoot=null}}
+  requestAnimationFrame(loop)})(0);})();
+
+// passaporto
+const INK=["#B8322A","#1F5FA8","#2E7D4F","#7A3E9D","#B5642B","#1A6B6B","#9B2C55","#3D4E8C"];
+let visited={};try{visited=JSON.parse(localStorage.getItem("meridiana-pp")||"{}")}catch(e){}
+function stampSVG(d,i){const col=INK[i%INK.length],id="sp"+i,date=new Date(visited[d.n]||Date.now()).toLocaleDateString("it-IT",{day:"2-digit",month:"short",year:"2-digit"});
+ return `<svg viewBox="0 0 120 120" style="--r:${((i*47)%40)-20}deg"><defs><path id="${id}" d="M60 60 m-40 0 a40 40 0 1 1 80 0 a40 40 0 1 1 -80 0"/></defs>
+ <circle cx="60" cy="60" r="54" fill="none" stroke="${col}" stroke-width="3"/><circle cx="60" cy="60" r="47" fill="none" stroke="${col}" stroke-width="1.2"/><circle cx="60" cy="60" r="28" fill="none" stroke="${col}" stroke-width="1.2"/>
+ <text fill="${col}" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2"><textPath href="#${id}" startOffset="0">${d.n.toUpperCase()} · ${d.c.toUpperCase()} ·</textPath></text>
+ <text x="60" y="58" text-anchor="middle" fill="${col}" font-family="Libre Caslon Display, serif" font-size="13">ARRIVO</text><text x="60" y="72" text-anchor="middle" fill="${col}" font-family="JetBrains Mono, monospace" font-size="8">${date}</text></svg>`}
+function renderPP(justNow){const book=document.getElementById("ppBook");
+ book.innerHTML=DEST.map((d,i)=>visited[d.n]?`<div class="slot ${d.n===justNow?"stamped":""}" title="${d.n}">${stampSVG(d,i)}</div>`:`<div class="slot"><span>${d.n}</span></div>`).join("");
+ book.querySelectorAll(".slot:not(.stamped) svg").forEach(s=>s.style.animation="none");
+ const n=Object.keys(visited).length;document.getElementById("ppN").textContent=n;document.getElementById("reward").classList.toggle("on",n>=DEST.length)}
+function stamp(d){const isNew=!visited[d.n];if(isNew){visited[d.n]=Date.now();try{localStorage.setItem("meridiana-pp",JSON.stringify(visited))}catch(e){}}renderPP(isNew?d.n:null)}
+document.getElementById("ppReset").onclick=()=>{visited={};try{localStorage.removeItem("meridiana-pp")}catch(e){}renderPP()};
+renderPP();
+
 </script>
 </body>
 </html>

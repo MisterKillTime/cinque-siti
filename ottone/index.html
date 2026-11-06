@@ -147,10 +147,45 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 @keyframes pin{from{opacity:0;transform:translateY(10px)}}
 @media (max-width:900px){.taste{grid-template-columns:1fr}.wheel{margin:0 auto}}
 @media (prefers-reduced-motion:reduce){.wheel .spin,.p{animation:none}}
+
+/* v3 */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--cobalt);z-index:60;width:0}
+#beans{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero .r{overflow:hidden}
+.hero .r .bag,.hero .r .stamp,.hero .r .bagdots{z-index:1}
+.lab{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--ink);background:var(--white);margin-bottom:88px}
+.lab .l{padding:32px;border-right:1px solid var(--ink);display:grid;gap:22px;align-content:start}
+.lab h2{font-size:clamp(36px,4.5vw,56px)}
+.meth{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--ink)}
+.meth button{border:0;border-right:1px solid var(--ink);background:transparent;padding:12px 6px;cursor:pointer;font-size:15px;font-weight:500}
+.meth button:last-child{border-right:0}
+.meth button[aria-pressed="true"]{background:var(--ink);color:var(--white)}
+.cups{display:flex;align-items:center;gap:14px}
+.cups button{width:40px;height:40px;border:1px solid var(--ink);background:transparent;font-size:20px;cursor:pointer}
+.cups output{font-size:28px;font-weight:700;min-width:30px;text-align:center;font-variant-numeric:tabular-nums}
+.recipe{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.recipe div{background:var(--white);padding:14px}
+.recipe b{display:block;font-size:30px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.lab .r2{background:var(--paper);display:grid;place-items:center;padding:28px;position:relative;min-height:420px}
+.lab .r2 svg{width:min(320px,100%);height:auto}
+.timer{position:absolute;top:20px;right:22px;font-family:var(--mono);font-size:28px;font-variant-numeric:tabular-nums}
+.drop{fill:#5A3A2C;opacity:0}
+.drip .drop{animation:drip .7s linear infinite}
+.drip .drop:nth-of-type(2){animation-delay:.23s}.drip .drop:nth-of-type(3){animation-delay:.46s}
+@keyframes drip{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(60px)}}
+@media (max-width:860px){.lab{grid-template-columns:1fr}.lab .l{border-right:0;border-bottom:1px solid var(--ink)}}
+@supports (animation-timeline:view()){
+ .how > div,.taste,.lab{animation:rise4 linear both;animation-timeline:view();animation-range:entry 0% entry 35%}
+ @keyframes rise4{from{opacity:.15;transform:translateY(40px)}}
+ .progress{animation:prog linear both;animation-timeline:scroll(root)}
+ @keyframes prog{to{width:100%}}
+}
+@media (prefers-reduced-motion:reduce){.how > div,.taste,.lab,.progress,.drip .drop{animation:none!important}}
 </style>
 </head>
 <body>
 
+<div class="progress" aria-hidden="true"></div>
 <div class="bar mono">Spedizione gratuita sopra i 39 € · tostato ogni martedì, spedito il mercoledì</div>
 <nav>
   <div class="wrap">
@@ -166,6 +201,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
     <p>Crudi scelti per lotto, tostati in piccole partite su un Petroncini del '62 restaurato. Ogni busta riporta data di tostatura e curva.</p>
   </div>
   <div class="r">
+    <canvas id="beans" aria-hidden="true"></canvas>
     <div class="stamp">TOSTATO<br>IL<br><span id="roastDate">—</span></div>
     <div class="bag" id="bag"><b id="bagN">Miscela<br>Bar Sport</b><span class="mono" id="bagM">250 g · Moka · Lotto 46/26</span></div>
     <div class="bagdots" id="bagDots"></div>
@@ -191,6 +227,24 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
   </div>
   <div class="grid" id="grid"></div>
 
+
+  <div class="lab" id="lab">
+    <div class="l">
+      <span class="mono">Laboratorio di estrazione</span>
+      <h2>Quanto caffè ci metto?</h2>
+      <div class="meth" role="group" aria-label="Metodo" id="meth"></div>
+      <div class="cups"><span class="mono">Tazze</span><button id="cm" aria-label="Una tazza in meno">−</button><output id="cups">2</output><button id="cp" aria-label="Una tazza in più">+</button></div>
+      <div class="recipe">
+        <div><span class="mono">Caffè</span><b id="rG">—</b></div>
+        <div><span class="mono">Acqua</span><b id="rW">—</b></div>
+        <div><span class="mono">Macinatura</span><b id="rM" style="font-size:20px">—</b></div>
+        <div><span class="mono">Tempo</span><b id="rT">—</b></div>
+      </div>
+      <p id="rTip" style="color:#4a4858;font-size:15px"></p>
+      <button class="add" id="brew" style="padding:14px">Avvia estrazione</button>
+    </div>
+    <div class="r2"><span class="timer" id="bTimer">0:00</span><svg id="vessel" viewBox="0 0 320 380" aria-label="Estrazione in corso"></svg></div>
+  </div>
   <div class="how">
     <div><span class="mono">01 · Crudo</span><h3>Compriamo per lotto</h3><p>Assaggiamo ogni partita prima di comprarla. Se non supera 84 punti SCA, resta dov'è.</p></div>
     <div><span class="mono">02 · Tostatura</span><h3>15 kg alla volta</h3><p>Partite piccole, curva registrata, raffreddamento ad aria. Mai caffè tostato da più di 10 giorni in spedizione.</p></div>
@@ -320,6 +374,52 @@ function quiz(){const k=qa.length;
  document.getElementById("qRe").onclick=()=>{qa=[];quiz()};
  document.getElementById("qGo").onclick=()=>{famF=null;wg.querySelectorAll("path").forEach(x=>x.classList.remove("dim"));document.getElementById("wheelLbl").textContent="Tutti";document.querySelectorAll(".fbtn").forEach(x=>x.setAttribute("aria-pressed",x.dataset.f==="all"));render("all");const el=document.getElementById("p-"+id);el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("hit");setTimeout(()=>el.classList.remove("hit"),2200)}}
 quiz();
+
+// ===== v3 =====
+// chicchi che cadono
+(()=>{const c=document.getElementById("beans"),x=c.getContext("2d"),box=c.parentElement;let mx=-999,my=-999;
+ box.addEventListener("pointermove",e=>{const r=box.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});box.addEventListener("pointerleave",()=>{mx=my=-999});
+ const B=Array.from({length:34},()=>({x:Math.random(),y:Math.random(),r:Math.random()*7,vr:(Math.random()-.5)*.02,s:.6+Math.random()*.9,v:.25+Math.random()*.5,dx:0,dy:0}));
+ function bean(px,py,rot,sz){x.save();x.translate(px,py);x.rotate(rot);x.scale(sz,sz);
+  const g=x.createLinearGradient(-9,-12,9,12);g.addColorStop(0,"#6B4430");g.addColorStop(1,"#2E1A12");x.fillStyle=g;x.beginPath();x.ellipse(0,0,9,12.5,0,0,7);x.fill();
+  x.strokeStyle="rgba(20,10,6,.9)";x.lineWidth=1.6;x.beginPath();x.moveTo(0,-10);x.bezierCurveTo(-4,-3,4,3,0,10);x.stroke();
+  x.fillStyle="rgba(255,255,255,.12)";x.beginPath();x.ellipse(-3.5,-4,2.5,5,-.4,0,7);x.fill();x.restore()}
+ (function loop(){const w=box.clientWidth,h=box.clientHeight,d=devicePixelRatio||1;if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=w*d;c.height=h*d}x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);
+  B.forEach(b=>{let px=b.x*w+b.dx,py=b.y*h+b.dy;const ddx=px-mx,ddy=py-my,dd=Math.hypot(ddx,ddy);if(dd<110){b.dx+=ddx/dd*4;b.dy+=ddy/dd*4}b.dx*=.93;b.dy*=.93;
+   if(!RM){b.y+=b.v/h;b.r+=b.vr}if(b.y*h>h+20){b.y=-30/h;b.x=Math.random()}bean(px,py,b.r,b.s)});requestAnimationFrame(loop)})();})();
+
+// laboratorio
+const M={
+ "Moka":{g:7,w:70,mac:"Media-fine",t:270,tip:"Acqua calda nella caldaia: la moka non si scalda troppo e il caffè non sa di bruciato.",cup:"tazzine"},
+ "Espresso":{g:9,w:30,mac:"Fine",t:28,tip:"18 g dentro, 36 g fuori in circa 28 secondi. Se esce prima, macina più fine.",cup:"tazzine"},
+ "V60":{g:15,w:250,mac:"Media",t:180,tip:"30 secondi di pre-infusione con il doppio dell'acqua del caffè, poi versa a spirale.",cup:"tazze"},
+ "French press":{g:16,w:240,mac:"Grossa",t:240,tip:"Quattro minuti, rompi la crosta, togli la schiuma e abbassa il filtro piano.",cup:"tazze"}};
+let meth="Moka",cups=2,brewing=false;
+const methEl=document.getElementById("meth");
+methEl.innerHTML=Object.keys(M).map(k=>`<button aria-pressed="${k===meth}">${k}</button>`).join("");
+methEl.querySelectorAll("button").forEach(b=>b.onclick=()=>{meth=b.textContent;methEl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));stopBrew();recipe();vessel()});
+document.getElementById("cm").onclick=()=>{cups=Math.max(1,cups-1);recipe()};document.getElementById("cp").onclick=()=>{cups=Math.min(6,cups+1);recipe()};
+const mmss=t=>`${Math.floor(t/60)}:${String(Math.round(t%60)).padStart(2,"0")}`;
+function recipe(){const m=M[meth];document.getElementById("cups").textContent=cups;
+ document.getElementById("rG").textContent=(meth==="Espresso"?m.g*cups*2/2:m.g*cups)+" g";document.getElementById("rW").textContent=m.w*cups+(meth==="Espresso"?" g":" ml");
+ document.getElementById("rM").textContent=m.mac;document.getElementById("rT").textContent=mmss(m.t);document.getElementById("rTip").textContent=m.tip;}
+function vessel(){const v=document.getElementById("vessel");let shape,inner,extra="";
+ if(meth==="Moka"){shape=`<path d="M90 360 L110 220 L210 220 L230 360Z" fill="#B8BCC2" stroke="#1A1A2C" stroke-width="3"/><path d="M95 210 L115 70 L205 70 L225 210Z" fill="#C9CDD2" stroke="#1A1A2C" stroke-width="3"/><path d="M110 70 L160 40 L210 70Z" fill="#1A1A2C"/><path d="M225 100 Q275 110 262 180 L225 175" fill="none" stroke="#1A1A2C" stroke-width="10"/><rect x="88" y="208" width="144" height="14" fill="#1A1A2C"/>`;inner=[118,80,84,126]}
+ else if(meth==="Espresso"){shape=`<rect x="70" y="40" width="180" height="40" fill="#1A1A2C"/><rect x="140" y="80" width="40" height="30" fill="#4A4858"/><path d="M95 200 L225 200 L215 330 Q160 345 105 330Z" fill="#FBFAF7" stroke="#1A1A2C" stroke-width="3"/><path d="M225 225 Q265 235 255 280 Q248 300 218 296" fill="none" stroke="#1A1A2C" stroke-width="8"/><ellipse cx="160" cy="340" rx="100" ry="12" fill="#C8A675"/>`;inner=[100,205,120,125];extra=`<g class="drp"><ellipse class="drop" cx="152" cy="118" rx="3" ry="5"/><ellipse class="drop" cx="168" cy="118" rx="3" ry="5"/></g>`}
+ else if(meth==="V60"){shape=`<path d="M70 60 L250 60 L185 170 L135 170Z" fill="#FBFAF7" stroke="#1A1A2C" stroke-width="3"/><rect x="120" y="170" width="80" height="12" fill="#1A1A2C"/><path d="M95 200 L225 200 L220 350 L100 350Z" fill="rgba(255,255,255,.35)" stroke="#1A1A2C" stroke-width="3"/>`;inner=[99,205,122,142];extra=`<g class="drp"><ellipse class="drop" cx="160" cy="188" rx="3" ry="5"/><ellipse class="drop" cx="160" cy="188" rx="3" ry="5"/><ellipse class="drop" cx="160" cy="188" rx="3" ry="5"/></g>`}
+ else{shape=`<rect x="95" y="60" width="130" height="290" rx="6" fill="rgba(255,255,255,.35)" stroke="#1A1A2C" stroke-width="3"/><rect x="85" y="48" width="150" height="16" fill="#1A1A2C"/><rect x="157" y="20" width="6" height="30" fill="#1A1A2C"/><circle cx="160" cy="18" r="9" fill="#1A1A2C"/><path d="M225 110 Q275 120 270 200 Q268 260 225 255" fill="none" stroke="#1A1A2C" stroke-width="10"/><rect id="plunger" x="98" y="70" width="124" height="6" fill="#4A4858"/>`;inner=[98,64,124,284]}
+ const[ix,iy,iw,ih]=inner;
+ v.innerHTML=`<defs><clipPath id="clipV"><rect x="${ix}" y="${iy}" width="${iw}" height="${ih}"/></clipPath><linearGradient id="cof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B07A3E"/><stop offset=".12" stop-color="#5A3A2C"/><stop offset="1" stop-color="#2A1A14"/></linearGradient></defs>${shape}<rect id="liq" clip-path="url(#clipV)" x="${ix}" y="${iy+ih}" width="${iw}" height="0" fill="url(#cof)" opacity=".92"/>${extra}`;
+ v.dataset.iy=iy;v.dataset.ih=ih;document.getElementById("bTimer").textContent="0:00"}
+let raf=null;
+function stopBrew(){brewing=false;cancelAnimationFrame(raf);document.getElementById("vessel").classList.remove("drip");document.getElementById("brew").textContent="Avvia estrazione"}
+document.getElementById("brew").onclick=()=>{if(brewing){stopBrew();return}vessel();brewing=true;const v=document.getElementById("vessel"),liq=document.getElementById("liq"),iy=+v.dataset.iy,ih=+v.dataset.ih,T=M[meth].t,speed=meth==="Espresso"?1:12,t0=performance.now();
+ v.classList.add("drip");document.getElementById("brew").textContent="Ferma";
+ (function f(t){const el=(t-t0)/1000*speed,k=Math.min(1,el/T),fill=ih*.82*(meth==="Moka"?Math.pow(k,1.6):k);liq.setAttribute("y",iy+ih-fill);liq.setAttribute("height",fill);
+  const pl=document.getElementById("plunger");if(pl&&k>.85)pl.setAttribute("y",70+(k-.85)/.15*200);
+  document.getElementById("bTimer").textContent=mmss(Math.min(el,T));
+  if(k<1&&brewing)raf=requestAnimationFrame(f);else{v.classList.remove("drip");if(k>=1){document.getElementById("brew").textContent="Pronto ☕ · rifallo";brewing=false}}})(t0)};
+recipe();vessel();
 </script>
 </body>
 </html>

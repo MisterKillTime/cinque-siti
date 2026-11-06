@@ -147,10 +147,27 @@ footer .demo{grid-column:1/-1;font-size:12px;opacity:.6;border-top:1px solid #2c
 .rv-track small{font-family:var(--body);font-size:13px;color:#4c5a51;margin-left:10px}
 @keyframes rv{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.rv-track,.dish{animation:none;opacity:1;transform:none}}
+
+/* v3 */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--straw);z-index:60;width:0}
+.land{position:relative}
+canvas#paddy{height:300px;margin-top:56px}
+.land .now{position:absolute;left:24px;top:14px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mist);background:rgba(22,32,26,.45);padding:6px 12px;border-radius:999px;backdrop-filter:blur(4px)}
+.plate-stage{position:relative}
+#steam{position:absolute;left:50%;top:0;transform:translateX(-50%);width:min(380px,80vw);height:200px;pointer-events:none}
+.dish:hover h3{color:var(--paddy);text-decoration:underline;text-decoration-color:var(--straw);text-underline-offset:5px}
+@supports (animation-timeline:view()){
+ .story,.split > div:first-child,.dish,.tasting,.book,.calendar{animation:rise2 linear both;animation-timeline:view();animation-range:entry 0% entry 35%}
+ @keyframes rise2{from{opacity:.15;transform:translateY(40px)}}
+ .progress{animation:prog linear both;animation-timeline:scroll(root)}
+ @keyframes prog{to{width:100%}}
+}
+@media (prefers-reduced-motion:reduce){.story,.dish,.tasting,.book,.calendar,.progress{animation:none!important}}
 </style>
 </head>
 <body>
 
+<div class="progress" aria-hidden="true"></div>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#">La Grangia<small>Trattoria in risaia</small></a>
@@ -168,12 +185,13 @@ footer .demo{grid-column:1/-1;font-size:12px;opacity:.6;border-top:1px solid #2c
     </div>
     <div class="plate-stage">
       <p class="kicker">Oggi in cucina</p>
+      <canvas id="steam" aria-hidden="true"></canvas>
       <canvas id="plate" aria-label="Piatto del giorno"></canvas>
       <div class="plate-cap" aria-live="polite"><b id="pName">—</b><span id="pDesc"></span></div>
       <div class="dots" id="pDots"></div>
     </div>
   </div>
-  <canvas id="paddy" aria-hidden="true"></canvas>
+  <div class="land"><canvas id="paddy" aria-hidden="true"></canvas><span class="now" id="landNow">—</span></div>
 </div>
 
 <div class="wrap">
@@ -252,25 +270,48 @@ footer .demo{grid-column:1/-1;font-size:12px;opacity:.6;border-top:1px solid #2c
 </footer>
 
 <script>
-// risaia: righe d'acqua con riflesso
+// paesaggio della risaia all'ora vera
 const cv=document.getElementById("paddy"),ctx=cv.getContext("2d");
 const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const lerp=(a,b,t)=>a+(b-a)*t,mix=(c1,c2,t)=>{const p=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));const a=p(c1),b=p(c2);return`rgb(${a.map((v,i)=>Math.round(lerp(v,b[i],t))).join(",")})`};
+const SKY=[[0,"#0B1626","#1B2B3F"],[5,"#141F35","#3A3550"],[6.5,"#5B6E9A","#F2A766"],[8,"#8DB7D6","#E9E2C8"],[12,"#76AEDB","#D8E8EE"],[17,"#7FA6C9","#F0D7A8"],[19,"#3E4F7A","#F08A4B"],[20.5,"#1A2440","#7A4A5C"],[22,"#0B1626","#1B2B3F"],[24,"#0B1626","#1B2B3F"]];
+function skyAt(h){for(let i=0;i<SKY.length-1;i++){const[a,t1,b1]=SKY[i],[b,t2,b2]=SKY[i+1];if(h>=a&&h<=b){const k=(h-a)/(b-a);return[mix(t1,t2,k),mix(b1,b2,k)]}}return[SKY[0][1],SKY[0][2]]}
+const FLIES=Array.from({length:40},()=>({x:Math.random(),y:Math.random(),p:Math.random()*7}));
+const BIRDS=Array.from({length:5},(_,i)=>({x:Math.random(),y:.15+Math.random()*.2,s:.00004+Math.random()*.00003,o:i}));
+function tree(x0,y0,h,w){ctx.beginPath();ctx.moveTo(x0,y0);ctx.quadraticCurveTo(x0-w,y0-h*.45,x0,y0-h);ctx.quadraticCurveTo(x0+w,y0-h*.45,x0,y0);ctx.fill()}
 function draw(t){
   const w=cv.clientWidth,h=cv.clientHeight,d=devicePixelRatio||1;
-  if(cv.width!==w*d){cv.width=w*d;cv.height=h*d}
+  if(cv.width!==Math.round(w*d)){cv.width=w*d;cv.height=h*d}
   ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);
-  for(let y=0;y<h;y+=6){
-    const k=y/h;ctx.strokeStyle=`rgba(212,162,63,${0.08+0.5*(1-k)*0.4})`;ctx.lineWidth=1;
-    ctx.beginPath();
-    for(let x=0;x<=w;x+=12){const yy=y+Math.sin(x*0.012+t*0.0009+y*0.05)*(1.5+k*2.5);x?ctx.lineTo(x,yy):ctx.moveTo(x,yy)}
-    ctx.stroke();
-  }
-  // file di piantine
-  ctx.strokeStyle="rgba(140,190,120,.55)";
-  for(let r=0;r<4;r++){const y=h*0.12+r*16;for(let x=10+r*7;x<w;x+=22){const s=Math.sin(t*0.0012+x*0.05)*1.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-3+s,y-10-r);ctx.moveTo(x,y);ctx.lineTo(x+3+s,y-9-r);ctx.stroke()}}
+  const n=new Date(),hr=n.getHours()+n.getMinutes()/60,[top,bot]=skyAt(hr),hz=h*.52,night=hr<6||hr>=20.5;
+  let g=ctx.createLinearGradient(0,0,0,hz);g.addColorStop(0,top);g.addColorStop(1,bot);ctx.fillStyle=g;ctx.fillRect(0,0,w,hz);
+  // stelle
+  if(night){for(let i=0;i<90;i++){const sx=(i*97.13%1)*w,sy=(i*53.77%1)*hz*.9,tw=.4+.6*Math.abs(Math.sin(t*.001+i));ctx.fillStyle=`rgba(255,255,240,${.5*tw})`;ctx.fillRect(sx,sy,1.4,1.4)}}
+  // sole o luna sull'arco
+  const isSun=hr>=6&&hr<20.5,k=isSun?(hr-6)/14.5:((hr+24-20.5)%24)/9.5;const bx=w*(.08+.84*k),by=hz-Math.sin(k*Math.PI)*hz*.78;
+  ctx.fillStyle=isSun?"rgba(255,236,190,.95)":"rgba(240,236,220,.95)";ctx.shadowColor=isSun?"rgba(255,200,120,.9)":"rgba(220,230,255,.6)";ctx.shadowBlur=30;ctx.beginPath();ctx.arc(bx,by,isSun?16:11,0,7);ctx.fill();ctx.shadowBlur=0;
+  if(!isSun){ctx.fillStyle=top;ctx.beginPath();ctx.arc(bx+5,by-3,10,0,7);ctx.fill()}
+  // uccelli di giorno
+  if(isSun&&!night){ctx.strokeStyle="rgba(22,32,26,.6)";ctx.lineWidth=1.3;BIRDS.forEach(b=>{const bxp=((b.x+t*b.s)%1.1-.05)*w,byp=b.y*hz+Math.sin(t*.002+b.o)*4,f=Math.sin(t*.012+b.o)*3;ctx.beginPath();ctx.moveTo(bxp-6,byp-f);ctx.quadraticCurveTo(bxp-2,byp-3,bxp,byp);ctx.quadraticCurveTo(bxp+2,byp-3,bxp+6,byp-f);ctx.stroke()})}
+  // orizzonte: pioppi e cascina
+  const sil=night?"#08100C":mix("#16201A","#3B5446",isSun?.5:0);ctx.fillStyle=sil;
+  for(let i=0;i<22;i++){const tx=(i/22)*w+((i*37)%11)-5;if(tx>w*.58&&tx<w*.78)continue;tree(tx,hz,26+((i*13)%14),5)}
+  const cx=w*.6;ctx.fillRect(cx,hz-22,w*.16,22);ctx.beginPath();ctx.moveTo(cx-6,hz-22);ctx.lineTo(cx+w*.08,hz-38);ctx.lineTo(cx+w*.16+6,hz-22);ctx.fill();ctx.fillRect(cx+w*.12,hz-52,10,30);
+  ctx.fillStyle=night?"rgba(255,200,110,.9)":"rgba(255,220,150,.0)";for(let i=0;i<4;i++)ctx.fillRect(cx+12+i*w*.035,hz-14,5,6);
+  // acqua: riflesso del cielo
+  g=ctx.createLinearGradient(0,hz,0,h);g.addColorStop(0,bot);g.addColorStop(1,top);ctx.fillStyle=g;ctx.fillRect(0,hz,w,h-hz);
+  ctx.globalAlpha=.35;ctx.fillStyle=isSun?"rgba(255,236,190,1)":"rgba(240,236,220,1)";for(let y=hz+(hz-by);y<h&&y>hz;y+=4){const ww=Math.max(2,(16-(y-hz-(hz-by))*.2))*(1+.5*Math.sin(t*.004+y));ctx.fillRect(bx-ww,y,ww*2,1.5)}ctx.globalAlpha=1;
+  for(let y=hz+2;y<h;y+=5){const kk=(y-hz)/(h-hz);ctx.strokeStyle=`rgba(212,162,63,${.06+.25*kk})`;ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<=w;x+=14){const yy=y+Math.sin(x*.012+t*.0009+y*.05)*(1+kk*2.2);x?ctx.lineTo(x,yy):ctx.moveTo(x,yy)}ctx.stroke()}
+  // piantine in primo piano
+  ctx.strokeStyle=night?"rgba(90,130,80,.6)":"rgba(120,175,95,.75)";ctx.lineWidth=1.2;
+  for(let r=0;r<5;r++){const y=hz+18+r*r*7+r*10;for(let x=8+r*9;x<w;x+=18+r*4){const sw=Math.sin(t*.0012+x*.05+r)*1.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-3-r*.6+sw,y-8-r*2.5);ctx.moveTo(x,y);ctx.lineTo(x+3+r*.6+sw,y-7-r*2.5);ctx.stroke()}}
+  // lucciole di notte
+  if(night||hr>=20){FLIES.forEach(f=>{const fx=(f.x+Math.sin(t*.0003+f.p)*.03)*w,fy=hz-20+f.y*60+Math.cos(t*.0005+f.p)*8,a=.5+.5*Math.sin(t*.004+f.p*3);ctx.fillStyle=`rgba(230,255,140,${a})`;ctx.shadowColor="rgba(230,255,140,.9)";ctx.shadowBlur=8;ctx.beginPath();ctx.arc(fx,fy,1.6,0,7);ctx.fill()});ctx.shadowBlur=0}
   if(!still)requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);
+(function lbl(){const n=new Date(),hr=n.getHours()+n.getMinutes()/60;const ph=hr<5?"notte":hr<7?"alba":hr<11?"mattina":hr<17?"pomeriggio":hr<20.5?"tramonto":hr<22?"sera, lucciole":"notte";
+ document.getElementById("landNow").textContent=`Alla cascina adesso · ${n.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})} · ${ph}`;setTimeout(lbl,30000)})();
 
 // calendario
 const M=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],S="rrrwwggghhrr";
@@ -360,6 +401,13 @@ function setDish(i){prev=PL[pi];pi=i;trans=still?1:0;document.getElementById("pN
 let ptimer=setInterval(()=>setDish((pi+1)%PL.length),4200);
 [...pd.children].forEach((b,i)=>b.onclick=()=>{clearInterval(ptimer);setDish(i);ptimer=setInterval(()=>setDish((pi+1)%PL.length),4200)});
 setDish(0);prev=null;requestAnimationFrame(drawPlate);
+
+// vapore sul piatto
+(()=>{const c=document.getElementById("steam"),x=c.getContext("2d");let P=[];
+ (function loop(t){const w=c.clientWidth,h=c.clientHeight,d=devicePixelRatio||1;if(c.width!==Math.round(w*d)){c.width=w*d;c.height=h*d}x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);
+  if(!still&&Math.random()<.35)P.push({x:w/2+(Math.random()-.5)*w*.35,y:h+10,r:6+Math.random()*10,l:1,ph:Math.random()*7});
+  P=P.filter(p=>p.l>0);P.forEach(p=>{p.y-=.55;p.r+=.12;p.l-=.006;const xx=p.x+Math.sin(t*.0015+p.ph)*8*(1-p.l);const g=x.createRadialGradient(xx,p.y,0,xx,p.y,p.r);g.addColorStop(0,`rgba(244,247,244,${.16*p.l})`);g.addColorStop(1,"rgba(244,247,244,0)");x.fillStyle=g;x.beginPath();x.arc(xx,p.y,p.r,0,7);x.fill()});
+  requestAnimationFrame(loop)})(0);})();
 </script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 # Cinque siti, cinque settori
 
-Cinque siti HTML statici, uno per settore, costruiti con l'AI per dimostrare un punto: con lo strumento giusto e la voglia di usarlo bene, la parte che si vede di un sito la fa chiunque.
+**Live:** https://misterkilltime.github.io/cinque-siti/
+
+Cinque siti costruiti con l'AI in una sera, per dimostrare un punto: con lo strumento giusto e la voglia di usarlo bene si fa molto più di "un prompt". Un file HTML per sito, niente framework, niente template.
 
 | Sito | Settore | Cosa c'è dentro |
 |---|---|---|
@@ -10,4 +12,35 @@ Cinque siti HTML statici, uno per settore, costruiti con l'AI per dimostrare un 
 | [Torrefazione Ottone](ottone/) | E-commerce | chicchi che cadono e scappano dal cursore, ruota degli aromi, quiz, laboratorio di estrazione con caraffa che si riempie, carrello funzionante |
 | [Meridiana Viaggi](meridiana/) | Agenzia viaggi | mappamondo da girare con notte e giorno reali, zoom sul punto cliccato, aereo in volo sulla rotta, Street View integrato, passaporto con timbri da collezionare |
 
-Tutto in HTML, CSS e JavaScript, un file per sito, niente build. Le attività sono di fantasia.
+## Lighthouse (mobile)
+
+| Sito | Prestazioni | Accessibilità | Best practice | SEO |
+|---|---|---|---|---|
+| [Forgia Training Club](forgia/) | 99 | 100 | 100 | 100 |
+| [Trattoria La Grangia](grangia/) | 99 | 100 | 100 | 100 |
+| [Studio Dentistico Morandi](morandi/) | 98 | 100 | 100 | 100 |
+| [Torrefazione Ottone](ottone/) | 99 | 100 | 100 | 100 |
+| [Meridiana Viaggi](meridiana/) | 89 | 100 | 100 | 100 |
+
+## SEO e GEO
+
+- **Dati strutturati Schema.org** su ogni pagina: `ExerciseGym`, `Restaurant` con menu completo, `Dentist` + `FAQPage`, `Store` con catalogo prodotti, `TravelAgency` con `TouristTrip` e coordinate.
+- **Open Graph e Twitter Card** con immagine dedicata (`og.png`) per ogni sito: anteprima ricca quando il link viene condiviso.
+- **URL canonici, meta description uniche, titoli pensati per la ricerca locale.**
+- **[`sitemap.xml`](sitemap.xml)** con tutte le pagine.
+- **[`llms.txt`](llms.txt)**: riassunto in Markdown dei fatti chiave di ogni attività, per i motori di risposta AI (ChatGPT, Claude, Perplexity).
+- **[`robots.txt`](robots.txt)** che ammette esplicitamente i crawler AI. Nota: i crawler leggono `robots.txt` solo alla radice del dominio, quindi questo file diventa effettivo con un dominio personalizzato.
+
+## Struttura
+
+```
+index.html        pagina d'ingresso
+forgia/           palestra
+grangia/          ristorante
+morandi/          studio dentistico
+ottone/           e-commerce
+meridiana/        agenzia viaggi (dati cartografici Natural Earth via world-atlas)
+sitemap.xml  robots.txt  llms.txt  404.html
+```
+
+Le attività, gli indirizzi e i numeri di telefono sono di fantasia.

@@ -1,0 +1,15 @@
+# Cinque siti, cinque settori
+
+> Cinque siti dimostrativi costruiti con l'AI: una palestra, un ristorante, uno studio dentistico, un e-commerce di caffè e un'agenzia viaggi. Le attività sono di fantasia; i siti sono reali e funzionanti.
+
+## Siti
+
+- [Forgia Training Club](https://misterkilltime.github.io/cinque-siti/forgia/): palestra a Novara, Corso Trieste 48. Aperta lun–ven 6–23, sab 8–20, dom 9–13. Sala pesi, functional, boxe, spinning, mobility, personal training. Abbonamenti da 39 €/mese (Full 12 mesi), 47 € (trimestrale), 55 € (mensile); −15% per studenti e under 26. Prima settimana gratuita.
+- [Trattoria La Grangia](https://misterkilltime.github.io/cinque-siti/grangia/): trattoria in cascina di risaia a Casalbeltrame (NO). Cena mar–sab 19:30–22:30, pranzo sab–dom 12:15–14:30, chiuso il lunedì. Specialità: panissa novarese (15 €), risotto al Gattinara (16 €), tapulone d'asino (19 €). Menu degustazione "Il giro della risaia" a 45 €.
+- [Studio Dentistico Morandi](https://misterkilltime.github.io/cinque-siti/morandi/): dentista a Novara, Via dei Tigli 12. Lun–ven 8:30–19:30, sab 9–13. Prima visita gratuita con panoramica. Igiene da 70 €, sbiancamento da 290 €, impianti da 900 €, allineatori da 2.400 €. Rate a tasso zero fino a 24 mesi sopra i 600 €.
+- [Torrefazione Ottone](https://misterkilltime.github.io/cinque-siti/ottone/): torrefazione a Novara dal 1962 con shop online. Tostatura il martedì, spedizione il mercoledì, gratuita sopra i 39 €. Caffè da 8,50 € a 14 € per 250 g: Bar Sport, Yirgacheffe, Cerrado, Huila, Deca Notte, Robusta Fine.
+- [Meridiana Viaggi](https://misterkilltime.github.io/cinque-siti/meridiana/): agenzia di viaggi su misura a Novara, Corso Cavour 21. Partenze di gruppo (max 12 persone) da Malpensa: Giappone 12 giorni da 3.890 €, Islanda 8 giorni da 2.450 €, New York 7 giorni da 1.980 €, Marocco 9 giorni da 1.490 €, Sudafrica 14 giorni da 4.200 €, Brasile 10 giorni da 2.790 €. Preventivo su misura in 48 ore.
+
+## Codice
+
+- [Repository](https://github.com/MisterKillTime/cinque-siti): un file HTML per sito, nessun framework.

@@ -1,9 +1,218 @@
-<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>5 siti, 5 settori</title>
-<style>body{margin:0;font-family:system-ui,sans-serif;background:#111;color:#eee;display:grid;place-items:center;min-height:100vh}main{max-width:560px;padding:24px}h1{font-size:40px;margin:0 0 20px}a{display:block;padding:18px 0;border-bottom:1px solid #333;color:#eee;text-decoration:none;font-size:22px}a:hover{color:#E8431C}small{color:#888;font-size:14px;margin-left:8px}</style></head>
-<body><main><h1>5 siti, 5 settori</h1>
-<a href="forgia/">Forgia Training Club<small>palestra</small></a>
-<a href="grangia/">Trattoria La Grangia<small>ristorante</small></a>
-<a href="morandi/">Studio Dentistico Morandi<small>studio medico</small></a>
-<a href="ottone/">Torrefazione Ottone<small>e-commerce</small></a>
-<a href="meridiana/">Meridiana Viaggi<small>agenzia viaggi</small></a>
-</main></body></html>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinque siti, cinque settori</title>
+<meta name="description" content="Cinque siti costruiti con l'AI in una sera: palestra, ristorante, dentista, e-commerce e agenzia viaggi. Interattivi, mobile, SEO 100/100 su Lighthouse.">
+<link rel="canonical" href="https://misterkilltime.github.io/cinque-siti/">
+<meta name="theme-color" content="#111111">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111'/%3E%3Ctext x='32' y='45' font-family='Arial' font-size='36' font-weight='700' text-anchor='middle' fill='%23fff'%3E5%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website"><meta property="og:locale" content="it_IT">
+<meta property="og:title" content="Cinque siti, cinque settori"><meta property="og:description" content="Costruiti con l'AI in una sera. Aprili da telefono.">
+<meta property="og:url" content="https://misterkilltime.github.io/cinque-siti/"><meta property="og:image" content="https://misterkilltime.github.io/cinque-siti/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://misterkilltime.github.io/cinque-siti/og.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Cinque siti, cinque settori", "url": "https://misterkilltime.github.io/cinque-siti/", "inLanguage": "it", "description": "Cinque siti dimostrativi costruiti con l'AI: palestra, ristorante, studio dentistico, e-commerce di caffè e agenzia viaggi.", "hasPart": [{"@type": "WebPage", "name": "Forgia Training Club", "url": "https://misterkilltime.github.io/cinque-siti/forgia/"}, {"@type": "WebPage", "name": "Trattoria La Grangia", "url": "https://misterkilltime.github.io/cinque-siti/grangia/"}, {"@type": "WebPage", "name": "Studio Dentistico Morandi", "url": "https://misterkilltime.github.io/cinque-siti/morandi/"}, {"@type": "WebPage", "name": "Torrefazione Ottone", "url": "https://misterkilltime.github.io/cinque-siti/ottone/"}, {"@type": "WebPage", "name": "Meridiana Viaggi", "url": "https://misterkilltime.github.io/cinque-siti/meridiana/"}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: indice da showroom. Cinque strisce, una per sito, che si allargano a turno; sotto, le prove misurate. */
+:root{
+  --paper:#F3F2EE;--ink:#111111;--muted:#5B5A55;--line:#D9D7D0;--card:#FFFFFF;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.5}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+header.top .wrap{display:flex;justify-content:space-between;align-items:center;height:64px}
+.logo{font-weight:800;font-stretch:80%;font-size:20px;text-decoration:none;letter-spacing:-.01em}
+.gh{font-family:var(--mono);font-size:13px;text-decoration:none;border:1px solid var(--ink);padding:8px 12px;border-radius:999px}
+.gh:hover{background:var(--ink);color:var(--paper)}
+
+.hero{padding:40px 0 28px;display:grid;grid-template-columns:1.1fr 1fr;gap:32px;align-items:end}
+h1{font-weight:900;font-stretch:72%;font-size:clamp(72px,12vw,176px);line-height:.84;letter-spacing:-.02em;text-wrap:balance}
+h1 span{display:block}
+h1 span:nth-child(2){font-stretch:110%;font-weight:300;letter-spacing:-.04em}
+h1 span:nth-child(3){color:transparent;-webkit-text-stroke:2px var(--ink)}
+.intro p{font-size:20px;max-width:40ch}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);margin-top:26px}
+.stats div{padding:14px 12px 0 0}
+.stats b{display:block;font-weight:800;font-stretch:75%;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* strisce */
+.slices{display:flex;gap:8px;height:min(62vh,560px);margin:16px 0 8px}
+.slice{position:relative;flex:1;min-width:0;border-radius:18px;overflow:hidden;background:var(--b);text-decoration:none;color:#fff;transition:flex .7s cubic-bezier(.6,0,.2,1)}
+.slice.on{flex:3.2}
+.slice img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:left top;transition:transform 1.2s cubic-bezier(.2,.8,.2,1),filter .7s}
+.slice:not(.on) img{filter:saturate(.4) brightness(.6);transform:scale(1.15)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.72))}
+.slice .tag{position:absolute;top:16px;left:16px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:var(--a);color:#111;padding:5px 9px;border-radius:999px;white-space:nowrap}
+.slice .name{position:absolute;left:20px;right:20px;bottom:44px;font-weight:800;font-stretch:78%;font-size:clamp(26px,3.4vw,46px);line-height:1;opacity:0;transform:translateY(12px);transition:opacity .4s .2s,transform .4s .2s}
+.slice .go{position:absolute;left:20px;bottom:18px;font-family:var(--mono);font-size:13px;opacity:0;transition:opacity .4s .3s}
+.slice.on .name,.slice.on .go{opacity:1;transform:none}
+.slice:not(.on) .tag{writing-mode:vertical-rl;transform:rotate(180deg);top:auto;bottom:16px}
+.bar{display:flex;gap:8px}
+.bar i{flex:1;height:3px;background:var(--line);overflow:hidden;border-radius:2px}
+.bar i b{display:block;height:100%;width:0;background:var(--ink)}
+.bar i.run b{animation:fill 4.5s linear forwards}
+@keyframes fill{to{width:100%}}
+@media (max-width:760px){.slices{flex-direction:column;height:auto}.slice,.slice.on{flex:none;height:74px}.slice.on{height:300px}.slice:not(.on) .tag{writing-mode:horizontal-tb;transform:none;top:50%;bottom:auto;translate:0 -50%}.slice{transition:height .6s cubic-bezier(.6,0,.2,1)}}
+@media (prefers-reduced-motion:reduce){.slice,.slice img,.bar i.run b{transition:none;animation:none}}
+
+section{padding:88px 0 0}
+h2{font-weight:900;font-stretch:72%;font-size:clamp(48px,7vw,96px);line-height:.9;letter-spacing:-.01em;margin-bottom:28px;text-wrap:balance}
+.row{display:grid;grid-template-columns:80px 1fr 1.4fr;gap:24px;padding:26px 0;border-top:1px solid var(--line);align-items:start}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row .n{font-family:var(--mono);font-size:14px;color:var(--muted);padding-top:8px}
+.row h3{font-weight:800;font-stretch:80%;font-size:clamp(30px,3.6vw,44px);line-height:1;margin:6px 0 10px}
+.row h3::before{content:"";display:inline-block;width:.42em;height:.42em;border-radius:50%;background:var(--a);margin-right:.25em;vertical-align:.12em}
+.row .link{font-family:var(--mono);font-size:13px}
+.row ul{list-style:none;display:grid;gap:8px;padding-top:8px}
+.row li{padding-left:22px;position:relative}
+.row li::before{content:"→";position:absolute;left:0;color:var(--muted)}
+@media (max-width:760px){.row{grid-template-columns:1fr;gap:8px}}
+
+.engine{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start}
+.tbl{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:8px 18px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:14px 8px;text-align:center;border-bottom:1px solid var(--line)}
+tr:last-child th,tr:last-child td{border-bottom:0}
+thead th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tbody th{text-align:left;font-weight:700;font-stretch:85%;font-size:17px}
+.score{--c:#0B8A4A;display:inline-grid;place-items:center;width:46px;height:46px;border-radius:50%;font-family:var(--mono);font-weight:600;font-size:15px;color:var(--c);background:conic-gradient(var(--c) calc(var(--v)*1%),#E7E5DE 0);position:relative}
+.score::before{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--card)}
+.score{isolation:isolate}.score::before{z-index:-1}
+.score.o{--c:#B26A00}
+.checks{display:grid;gap:10px}
+.check{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:28px 1fr;gap:12px}
+.check i{width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-style:normal;font-size:13px}
+.check b{font-weight:700}
+.check p{color:var(--muted);font-size:15px}
+.engine > div{min-width:0}
+@media (max-width:900px){.engine{grid-template-columns:1fr}}
+footer{margin-top:96px;border-top:2px solid var(--ink);padding:28px 0 48px;font-size:15px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="logo" href="./">CINQUE SITI</a><a class="gh" href="https://github.com/MisterKillTime/cinque-siti">Codice su GitHub ↗</a></div></header>
+<main class="wrap">
+  <div class="hero">
+    <h1><span>5 siti.</span><span>5 settori.</span><span>Una sera.</span></h1>
+    <div class="intro">
+      <p>Costruiti con l'AI, un file HTML ciascuno. Niente template e niente framework. Si toccano, si girano e si muovono da soli: aprili dal telefono.</p>
+      <div class="stats">
+        <div><b>100</b><span class="mono">SEO medio</span></div>
+        <div><b>100</b><span class="mono">Accessibilità</span></div>
+        <div><b>97</b><span class="mono">Prestazioni</span></div>
+        <div><b>2.268</b><span class="mono">Righe di codice</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slices" id="slices">
+      <a class="slice" href="forgia/" style="--a:#E8431C;--b:#131313" data-i="0">
+        <img src="forgia/og.png" alt="Anteprima di Forgia Training Club" width="1200" height="630" >
+        <span class="shade"></span>
+        <span class="tag">01 · Palestra</span>
+        <span class="name">Forgia Training Club</span>
+        <span class="go">Apri il sito →</span>
+      </a>
+      <a class="slice" href="grangia/" style="--a:#D4A23F;--b:#1E3A2C" data-i="1">
+        <img src="grangia/og.png" alt="Anteprima di Trattoria La Grangia" width="1200" height="630" >
+        <span class="shade"></span>
+        <span class="tag">02 · Ristorante</span>
+        <span class="name">Trattoria La Grangia</span>
+        <span class="go">Apri il sito →</span>
+      </a>
+      <a class="slice" href="morandi/" style="--a:#73C6BE;--b:#0D4A55" data-i="2">
+        <img src="morandi/og.png" alt="Anteprima di Studio Dentistico Morandi" width="1200" height="630" loading="lazy">
+        <span class="shade"></span>
+        <span class="tag">03 · Studio medico</span>
+        <span class="name">Studio Dentistico Morandi</span>
+        <span class="go">Apri il sito →</span>
+      </a>
+      <a class="slice" href="ottone/" style="--a:#C8A675;--b:#2443B5" data-i="3">
+        <img src="ottone/og.png" alt="Anteprima di Torrefazione Ottone" width="1200" height="630" loading="lazy">
+        <span class="shade"></span>
+        <span class="tag">04 · E-commerce</span>
+        <span class="name">Torrefazione Ottone</span>
+        <span class="go">Apri il sito →</span>
+      </a>
+      <a class="slice" href="meridiana/" style="--a:#C9A04A;--b:#08161F" data-i="4">
+        <img src="meridiana/og.png" alt="Anteprima di Meridiana Viaggi" width="1200" height="630" loading="lazy">
+        <span class="shade"></span>
+        <span class="tag">05 · Agenzia viaggi</span>
+        <span class="name">Meridiana Viaggi</span>
+        <span class="go">Apri il sito →</span>
+      </a>
+  </div>
+  <div class="bar" id="bar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+
+  <section aria-labelledby="h-cosa">
+    <h2 id="h-cosa">Cosa fa ognuno</h2>
+    
+      <article class="row" style="--a:#E8431C">
+        <div class="n">01</div>
+        <div class="t"><span class="mono">Palestra</span><h3>Forgia Training Club</h3><a class="link" href="forgia/">Apri →</a></div>
+        <ul><li>Titolo che cambia spessore seguendo il dito</li><li>Scintille da smerigliatrice, e al click esplodono</li><li>Aperto/chiuso, prossima classe e affollamento in tempo reale</li><li>Calcolatore del massimale con bilanciere caricato a dischi</li></ul>
+      </article>
+      <article class="row" style="--a:#D4A23F">
+        <div class="n">02</div>
+        <div class="t"><span class="mono">Ristorante</span><h3>Trattoria La Grangia</h3><a class="link" href="grangia/">Apri →</a></div>
+        <ul><li>Risaia che segue l&#x27;ora vera: alba, tramonto, lucciole di notte</li><li>Piatto del giorno disegnato in diretta, con il vapore</li><li>Menu animato con abbinamento vini al tocco</li><li>Prenotazione con orari pieni e chiusura del lunedì</li></ul>
+      </article>
+      <article class="row" style="--a:#73C6BE">
+        <div class="n">03</div>
+        <div class="t"><span class="mono">Studio medico</span><h3>Studio Dentistico Morandi</h3><a class="link" href="morandi/">Apri →</a></div>
+        <ul><li>Arcate dentali cliccabili in notazione FDI</li><li>Prima/dopo che scorre da solo</li><li>Timer dello spazzolino guidato per zone</li><li>Prenotazione a step e calcolatore rate</li></ul>
+      </article>
+      <article class="row" style="--a:#C8A675">
+        <div class="n">04</div>
+        <div class="t"><span class="mono">E-commerce</span><h3>Torrefazione Ottone</h3><a class="link" href="ottone/">Apri →</a></div>
+        <ul><li>Chicchi che cadono e scappano dal cursore</li><li>Ruota degli aromi che filtra i caffè</li><li>Laboratorio di estrazione con caraffa che si riempie</li><li>Carrello vero con soglia di spedizione gratuita</li></ul>
+      </article>
+      <article class="row" style="--a:#C9A04A">
+        <div class="n">05</div>
+        <div class="t"><span class="mono">Agenzia viaggi</span><h3>Meridiana Viaggi</h3><a class="link" href="meridiana/">Apri →</a></div>
+        <ul><li>Mappamondo da girare con notte e giorno reali</li><li>Zoom sul punto cliccato e Street View integrato</li><li>Aereo in volo lungo la rotta da Malpensa</li><li>Passaporto con timbri da collezionare</li></ul>
+      </article>
+  </section>
+
+  <section aria-labelledby="h-motore">
+    <h2 id="h-motore">Sotto il cofano</h2>
+    <div class="engine">
+      <div>
+        <p class="mono" style="margin-bottom:12px">Google Lighthouse · mobile · misurato il 06/11/2026</p>
+        <div class="tbl"><table>
+          <thead><tr><th scope="col">Sito</th><th scope="col">Prestazioni</th><th scope="col">Accessibilità</th><th scope="col">Best practice</th><th scope="col">SEO</th></tr></thead>
+          <tbody><tr><th scope="row">Forgia Training Club</th><td><span class="score g" style="--v:99">99</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td></tr><tr><th scope="row">Trattoria La Grangia</th><td><span class="score g" style="--v:99">99</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td></tr><tr><th scope="row">Studio Dentistico Morandi</th><td><span class="score g" style="--v:98">98</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td></tr><tr><th scope="row">Torrefazione Ottone</th><td><span class="score g" style="--v:99">99</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td></tr><tr><th scope="row">Meridiana Viaggi</th><td><span class="score o" style="--v:89">89</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td><td><span class="score g" style="--v:100">100</span></td></tr></tbody>
+        </table></div>
+      </div>
+      <div class="checks">
+        <div class="check"><i>✓</i><div><b>Dati strutturati Schema.org</b><p>Google legge orari, indirizzo, prezzi, menu con 15 piatti, 6 prodotti, 8 viaggi con coordinate e le FAQ del dentista.</p></div></div>
+        <div class="check"><i>✓</i><div><b>Anteprime per social e chat</b><p>Open Graph e Twitter Card con immagine dedicata: il link incollato in WhatsApp o Instagram mostra il sito.</p></div></div>
+        <div class="check"><i>✓</i><div><b>GEO, cioè leggibile dalle AI</b><p>File <a href="llms.txt">llms.txt</a> con i fatti chiave di ogni attività, pensato per ChatGPT, Claude e Perplexity.</p></div></div>
+        <div class="check"><i>✓</i><div><b>Sitemap e indicizzazione</b><p><a href="sitemap.xml">sitemap.xml</a>, URL canonici, descrizioni uniche, titoli per ricerca locale.</p></div></div>
+        <div class="check"><i>✓</i><div><b>Mobile e accessibilità</b><p>Layout a una colonna sotto i 400 px, contrasti verificati, navigazione da tastiera, animazioni ridotte se il telefono lo chiede.</p></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>Le attività sono di fantasia. I numeri di Lighthouse no.</span><a href="https://github.com/MisterKillTime/cinque-siti">github.com/MisterKillTime/cinque-siti</a></div></footer>
+<script>
+(()=>{const sl=[...document.querySelectorAll(".slice")],bars=[...document.querySelectorAll("#bar i")];let i=0,t=null,hold=false;
+ const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+ function on(n){i=n;sl.forEach((s,k)=>s.classList.toggle("on",k===i));bars.forEach((b,k)=>{b.classList.remove("run");b.querySelector("b").style.width=k<i?"100%":"0"});
+  if(!hold&&!RM){void bars[i].offsetWidth;bars[i].classList.add("run")}clearTimeout(t);if(!hold&&!RM)t=setTimeout(()=>on((i+1)%sl.length),4500)}
+ sl.forEach((s,k)=>{s.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse"){hold=true;on(k)}});s.addEventListener("focus",()=>{hold=true;on(k)});
+  s.addEventListener("click",e=>{if(!s.classList.contains("on")){e.preventDefault();hold=true;on(k)}})});
+ document.getElementById("slices").addEventListener("pointerleave",()=>{hold=false;on(i)});
+ on(0);})();
+</script>
+</body>
+</html>
